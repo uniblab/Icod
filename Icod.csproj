@@ -6,7 +6,7 @@
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
     License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+    version 3 of the License, or (at your option) any later version.
 
     This library is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -24,10 +24,10 @@
 		<AssemblyName>Icod</AssemblyName>
 		<ProjectGuid>{5F3FC1A8-F3DA-4968-970C-233F3EAD5A8F}</ProjectGuid>
 		<OutputPath>bin\$(Configuration)\</OutputPath>
-		<DocumentationFile>bin\$(Configuration)\$(AssemblyName).XML</DocumentationFile>
+		<DocumentationFile>$(OutDir)\$(Configuration)\$(TargetFrameworkVersion)\$(AssemblyName).XML</DocumentationFile>
 		<StartupObject />
 		<OutputType>Library</OutputType>
-		<TargetFramework>net481</TargetFramework>
+		<TargetFrameworks>net20;net30;net35;net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;net481;netstandard20;netstandard2.1;net5.0;net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
 		<TargetFrameworkProfile></TargetFrameworkProfile>
 		<FileAlignment>512</FileAlignment>
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -79,7 +79,8 @@
 		<Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
 	</ItemGroup>
 	<ItemGroup>
-		<Content Include="copying.txt" />
+		<Content Include="LICENSE" CopyToOutputDirectory="Always">
+		</Content>
 		<None Include="doc\Icod.Data.xml" />
 		<None Include="doc\Icod.Threading.xml" />
 		<None Include="doc\Icod.xml" />
@@ -88,6 +89,7 @@
 		<PreBuildEvent>
 		</PreBuildEvent>
 		<PostBuildEvent>
+			ren LICENSE $(AssemblyName).License.txt
 		</PostBuildEvent>
 	</PropertyGroup>
 </Project>
