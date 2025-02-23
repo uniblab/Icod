@@ -1,0 +1,815 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- 
+	Copyright (c) 2025 Timothy J. ``Flytrap'' Bruce of the Icod.
+
+    Permission is granted to copy, distribute and/or modify this document
+    under the terms of the GNU Free Documentation License, Version 1.2
+    or any later version published by the Free Software Foundation;
+    with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+    A copy of the license is included in the section entitled "GNU
+    Free Documentation License".
+-->
+<types>
+
+	<type name="Icod.Threading.ISynchronousLock">
+		<member name="">
+			<summary>The required pubic implementation for all synchronous lock mechanisms.</summary>
+		</member>
+		<member name="Enter">
+			<summary>Enters synchronized (locked) context.</summary>
+		</member>
+		<member name="Exit">
+			<summary>Leaves synchronized (locked) context.</summary>
+		</member>
+	</type>
+	<type name="Icod.Threading.SynchronousLockBase">
+		<member name="">
+			<summary>An abstract class containing the required interface for synchronous synchronized context (locking).</summary>
+			<remarks>
+				Since all Icod synchronous context (locking) types stem from a non-trivial common type, 
+				great flexibility is afforded to the programmer.  
+				One can, as shown in the example below, dynamically tailor or tune one's locking needs dynamically.  
+				One could even dynamically change the locking mechanism used at run-time based on performance data, or expected load averages.  
+			</remarks>
+			<example>
+				Dynamically using the various ICOD locking mechanisms:
+				<code>
+namespace Example {
+	private static Icod.Threading.SynchronousLockBase myGlobalLock;
+
+	[System.STAThread]
+	private static void Main( System.String[] args ) {
+		if ( "none" == args[ 0 ].ToLower() ) {
+			myGlobalLock = new Icod.Threading.NullLock();
+		} else if ( "user" == args[ 0 ].ToLower() ) {
+			myGlobalLock = new Icod.Threading.UserLock();
+		} else if ( "kernel" == args[ 0 ].ToLower() ) {
+			myGlobalLock = new Icod.Threading.KernalLock();
+		} else {
+			throw new System.InvalidOperationException( "locking mechanism must be defined!" );
+		}
+
+		// .. continue routine
+	}
+	// rest of program follows...
+}
+				</code>
+			</example>
+			<seealso cref="T:Icod.Threading.Lock`1" />
+			<seealso cref="T:Icod.Threading.SharedLock" />
+		</member>
+		<member name="#ctor">
+			<summary>Used by types which derive from this type.</summary>
+		</member>
+		<member name="#dtor">
+			<summary>Ensures managed and unmanaged resources are released by any type derived from this type.</summary>
+			<remarks>
+				Always remember to invoke <see cref="M:Icod.Threading.SynchronousLockBase.Dispose">Icod.Threading.SynchronousLockBase.Dispose</see> 
+					before finalizing (setting to <c>null</c> all object references) synchronization context (lock) object to free any unmanaged resources.  
+			</remarks>
+			<seealso cref="M:System.Object.Finalize" />
+			<seealso cref="T:System.IDisposable" />
+		</member>
+		<member name="Spin">
+			<summary>Used to wait in user-mode.</summary>
+			<remarks>Identical to invoking <see cref="M:Icod.Threading.SynchronousLockBase.Spin(System.Int32)">Icod.Threading.SynchronousLockBase.Spin( 1 )</see></remarks>
+		</member>
+		<member name="Spin(System.Int32)">
+			<summary>Used to wait in user-mode.</summary>
+			<param name="count">
+				The number of user-mode spin iterations to execute.  
+				If <paramref name="count" /> is less-than or equal-to <c>0</c>, <c>1</c> will be substituted.  
+			</param>
+			<remarks>
+				On multiprocessor systems, this invokes <see cref="M:System.Threading.Thread.SpinWait(System.Int32)">System.Threading.Thread.SpinWait( <paramref name="count" /> )</see>; 
+				otherwise (singleprocessor systems), the function p/Invokes the SwitchToThread() function in a loop a number of times specified by <paramref name="count" />.
+			</remarks>
+		</member>
+		<member name="IsDisposed">
+			<summary>Used to determine if the object has already been disposed.</summary>
+			<value>
+				<see langword="true" />  if the object has been disposed; otherwise, <see langword="false" />.
+			</value>
+			<remarks>
+				Set this property to <see langword="true" /> in any overrides of <see cref="M:Icod.Threading.SynchronousLockBase.Dispose(System.Boolean)">Icod.Threading.SynchronousLockBase.Dispose(System.Boolean)</see> which do not invoke the <c>base</c> implementation.
+			</remarks>
+			<seealso cref="M:System.IDisposable.Dispose" />
+		</member>
+		<member name="Dispose">
+			<summary>Releases unmanaged locking objects.</summary>
+			<remarks>
+				Use this method to close or release unmanaged resources the <see cref="T:Icod.Threading.SynchronousLockBase">Icod.Threading.SynchronousLockBase</see> implementations use to maintain synchronized context, such as mutexes, semaphores, or other wait events.  This method is, by convention, used for all tasks associated with freeing resources held by an object.
+			</remarks>
+		</member>
+		<member name="Dispose(System.Boolean)">
+			<summary>Releases unmanaged locking objects.</summary>
+			<param name="disposing">
+				If <see langword="true" /> then managed resources are also disposed and discarded along with unmanaged resources, otherwise only unmanaged resources are disposed and discarded.
+			</param>
+			<remarks>
+				Use this method to close or release unmanaged resources such as files, streams, and handles held by an instance of the class that implements this interface. This method is, by convention, used for all tasks associated with freeing resources held by an object, or preparing an object for reuse.
+				When overriding this method, do set <see cref="P:Icod.Threading.SynchronousLockBase.IsDisposed">IsDisposed = true</see> to prevent future disposal operations.  
+			</remarks>
+		</member>
+	</type>
+	<type name="Icod.Threading.SynchronousLockBase.NativeMethods">
+		<member name="">
+			<summary>Container for p/Invoke calls.</summary>
+		</member>
+		<member name="SwitchToThread">
+			<summary>p/Invoke to kernel32's SwitchToThread</summary>
+			<remakrs>
+				<c>SwitchToThread()</c> yields the processor to another thread for execution.
+				It is a most efficient wait function when there is only one processor (logical or physical),
+				because the thread on which we are waiting is obviously not scheduled and executing.
+				For multiprocessor it is often more efficient to enter a spinlock via the <see cref="M:System.Threading.Thread.SpinWait(System.Int32)">System.Threading.Thread.SpinWait(System.Int32)</see> method,
+				because the thread on which we are waiting may already be scheduled and executing on another processor.
+			</remakrs>
+		</member>
+	</type>
+	<type name="Icod.Threading.NullLock">
+		<member name="">
+			<summary>A dummy-load, which provides no synchronized context (locking).</summary>
+			<threadsafety instance="true" static="true" />
+			<seealso cref="T:Icod.Threading.UserLock" />
+			<seealso cref="T:Icod.Threading.KernelLock" />
+		</member>
+		<member name="#ctor">
+			<summary>Creates a new locking instance.</summary>
+			<remarks>
+				The <see cref="T:Icod.Threading.NullLock">Icod.Threading.NullLock</see> provides no synchronization context (locking) at all.  
+			</remarks>
+		</member>
+	</type>
+	<type name="Icod.Threading.UserLock">
+		<member name="">
+			<summary>An efficient user-mode locking mechanism.</summary>
+			<threadsafety instance="true" static="true" />
+			<remarks>
+				This lock operates entirely in user-mode.  
+				Since it never waits in kernel-mode, it can be extremely fast by making use of the <c>SwitchToThread()</c> API (on single-CPU machines) and the <see cref="M:System.Threading.Thread.SpinWait(System.Int32)">System.Threading.Thread.SpinWait(System.Int32)</see> on multi-CPU machines.  
+				Since all spins are in user-mode, it is not the most efficient locking mechanism for long wait times.  
+				When waits are rather long, suspending the threads inside a kernel-mode lock often proves more efficient, 
+					since threads which are not running are not starving other threads for CPU time.  
+			</remarks>
+			<seealso cref="T:Icod.Threading.NullLock" />
+			<seealso cref="T:Icod.Threading.KernelLock" />
+		</member>
+		<member name="#ctor">
+			<summary>Creates a new instance of a user-mode locking mechanism.</summary>
+		</member>
+	</type>
+	<type name="Icod.Threading.KernelLock">
+		<member name="">
+			<summary>An efficient kernel-mode locking mechanism.</summary>
+			<threadsafety instance="true" static="true" />
+			<remarks>
+				This lock operates entirely in kernel-mode.
+				Since this lock never waits in user-mode, additional overhead is involved for the transition from user-mode to kernel-mode and back to user-mode.  
+				If the wait time is rather long, this is actually the most efficient locking mechanism because threads which are suspended starve other threads for CPU time.  
+				If the wait time is quite short, often a user-mode lock is more efficient because the transition times between kernel- and user-modes can conceivably take longer than waiting for the lock to become free.  
+			</remarks>
+			<seealso cref="T:Icod.Threading.NullLock" />
+			<seealso cref="T:Icod.Threading.KernelLock" />
+		</member>
+		<member name="#ctor">
+			<summary>Creates a new instance of a kernel-mode locking mechanism.</summary>
+		</member>
+	</type>
+
+	<type name="Icod.Threading.LockExitHandler">
+		<member name="">
+			<summary>
+				Used by the <see cref="T:System.Threading.ThreadPool">System.Threading.ThreadPool</see> to efficiently spin-up the lock request,
+				following the <abbr title="Asynchronous Programming Model">APM</abbr>model.
+			</summary>
+		</member>
+	</type>
+	<type name="Icod.Threading.LockExit">
+		<member name="">
+			<summary>
+			</summary>
+			<remarks>
+			</remarks>
+			<threadsafety instance="true" static="true" />
+		</member>
+		<member name="#ctor">
+			<summary>
+				Creates a new LockExit object.
+			</summary>
+			<param name="exit">
+				The <see cref="T:Icod.Threading.LockExitHandler">Icod.Threading.LockExitHandler</see> to invoke when the LockExit is disposed.
+			</param>
+		</member>
+	</type>
+	<type name="Icod.Threading.Lock`1">
+		<member name="">
+			<summary>An synchronous generic wrapper for all the synchronous lock mechanisms.</summary>
+			<typeparam name="L">
+				The type of synchronous lock.
+			</typeparam>
+			<threadsafety instance="true" static="true" />
+			<remarks>
+				<typeparamref name="L">L</typeparamref> must be derived from <see cref="T:Icod.Threading.SynchronousLockBase">Icod.Threading.SynchronousLockBase</see>.
+			</remarks>
+			<seealso cref="T:Icod.Threading.SynchronousLockBase" />
+		</member>
+		<member name="#ctor">
+			<summary>
+				Creates a new <see cref="T:Icod.Threading.Lock`1">Icod.Threading.Lock</see>.
+			</summary>
+			<remarks>
+				Identical to invoking <c>new Icod.Threading.Lock&lt;L&gt;( new L() )</c>
+			</remarks>
+
+		</member>
+		<member name="#ctor(L)">
+			<summary>
+				Creates a new <see cref="T:Icod.Threading.Lock`1">Icod.Threading.Lock</see>, using <paramref name="theLock" /> for her base lock mechanism.
+			</summary>
+			<param name="theLock">
+				An existing <see cref="T:Icod.Threading.SynchronousLockBase">Icod.Threading.SynchronousLockBase</see> object to use for all synchronized (locking) operations.
+			</param>
+			<exception cref="T:System.NullArgumentException">
+				Thrown if <paramref name="theLock"/> is <c>null</c>.
+			</exception>
+		</member>
+		<member name="Acquire">
+			<summary>Returns a synchronized (lock) context cookie.</summary>
+			<returns>
+				A <see cref="T:System.IDisposable">System.IDisposable</see> lock-cookie, which retains the lock until <see cref="M:System.IDisposable.Dispose">Dispose</see> is invoked.
+			</returns>
+			<remarks>When the cookie is disposed, via the <see cref="M:System.IDisposable.Dispose">System.IDisposable.Dispose</see> method, the lock is released and synchronization context is exited.</remarks>
+			<example>
+				<c>using ( ... ) { ... }</c> syntax example:
+				<code>
+// unsynchronized execution here
+using ( myLockObject.Acquire() ) {
+	// we are now in synchronized execution
+	SomeSharedObject.ModifyData();
+	mySharedObject.SomeProperty = aUsefulValue;
+	SomeSharedObject = new SomeObject( initValues );
+}
+// we did not need to remember to Exit the lock,
+//    because the using block did it for us when
+//    when the lock cookie's Dispose method was
+//    invoked
+				</code>
+			</example>
+		</member>
+	</type>
+
+	<type name="Icod.Threading.LockResult">
+		<member name="">
+			<summary>Represents the status of an asynchronous operation.</summary>
+		</member>
+		<member name="#ctor(System.AsyncCallback,System.Object)">
+			<summary>
+				Creates a new instance of the generic AsyncResult.
+			</summary>
+		</member>
+		<member name="SetCompletion(R,System.Boolean,System.Exception)">
+			<summary>
+				Used to set the AsyncResult object's completion state, throw any exceptions which may have been generated during the request, and report the <paramref name="result" /> of the operation.
+			</summary>
+			<param name="result">
+				The results of the asynchronous operation.
+			</param>
+			<param name="completedSynchronously">
+				<see langword="true" /> if the asynchronous operation completed synchronously; otherwise, <see langword="false" />.
+			</param>
+			<param name="completionException">
+				<c>null</c> if no exceptions were raised during the asynchronous request; otherwise a <see cref="T:System.Exception">System.Exception</see>.
+			</param>
+		</member>
+		<member name="EndInvoke">
+			<summary>Waits for the pending asynchronous read to complete.</summary>
+			<returns>
+				The results, <typeparamref name="R" />, of the operation.
+			</returns>
+		</member>
+	</type>
+
+	<type name="Icod.Threading.IAsynchronousLock">
+		<member name="">
+			<summary>The required pubic implementation for all asynchronous lock mechanisms.</summary>
+		</member>
+		<seealso cref="T:Icod.Threading.ISynchronousLock" />
+		<member name="BeginAcquire">
+			<summary>Enters a sycnrhonization context (lock) asynchronously.</summary>
+			<param name="callback">
+				The <see cref="T:System.AsyncCallback">System.AsyncCallback</see> to be invoked when the lock is acquired.
+			</param>
+			<param name="state">
+				The user-provided <see cref="T:System.Object">object</see> that distinguishes this particular asynchronous request from other requests.
+			</param>
+			<returns>
+				<para>
+					A <see cref="T:System.IAsyncResult">System.IAsyncResult</see> that represents the asynchronous operation, which could still be pending.
+				</para>
+				<para>
+					Following the <abbr title="Asynchronous Programming Model">APM</abbr>,
+					the status of the operation may be monitored via the <paramref name="callback" />,
+					or the returned <see cref="T:System.IAsyncResult">System.IAsyncResult</see>'s <see cref="P:System.IAsyncResult.WaitHandle">System.IAsyncResult.WaitHandle</see>
+					and <see cref="P:System.IAsyncResult.IsCompleted">System.IAsyncResult.IsCompleted</see> properties.
+				</para>
+			</returns>
+		</member>
+		<member name="EndAcquire">
+			<summary>Waits for the pending asynchronous lock to complete.</summary>
+			<param name="result">
+				The <see cref="System.IAsyncResult">System.IAsyncResult</see> returned by the <see cref="M:Icod.Threading.IAsynchronousLock.BeginAcquire(System.AsyncCallback,System.Object)">BeginAcquire</see> request.
+			</param>
+			<returns>
+				A <see cref="T:System.IDisposable">System.IDisposable</see> lock-cookie, which retains the lock until <see cref="M:System.IDisposable.Dispose">Dispose</see> is invoked.
+			</returns>
+			<remarks>
+				If the operation started by the invocation to <see cref="M:Icod.Threading.IAsynchronousLock.BeginAcquire">BeginAcquire</see> has yet to complete,
+				this method will block until the operation is completed; otherwise, it returns immediately,
+				setting the <see cref="P:System.IAsyncResult.IsCompleted">System.IAsyncResult.IsCompleted</see> property accordingly and throwing
+				any exceptions which may have been raised during the asynchronous execution.
+			</remarks>
+		</member>
+	</type>
+	<type name="Icod.Threading.AsynchronousLock`1">
+		<member name="">
+			<summary>An asynchronous wrapper for synchronous lock mechanisms.</summary>
+			<typeparam name="L">
+				The type of synchronous lock to wrap via the <abbr title="Asynchronous Programming Model">APM</abbr>.
+			</typeparam>
+			<threadsafety instance="true" static="true" />
+			<remarks>
+				<typeparamref name="L">L</typeparamref> must be derived from <see cref="T:Icod.Threading.SynchronousLockBase">Icod.Threading.SynchronousLockBase</see>.
+			</remarks>
+			<seealso cref="T:Icod.Threading.Lock" />
+		</member>
+		<member name="#ctor">
+			<summary>
+				Creates a new <see cref="T:Icod.Threading.AsynchronousLock`1">Icod.Threading.AsynchronousLock</see>, wrapping a new instance of <typeparamref name="L" /> into the <abbr title="Asynchronous Programming Model">APM</abbr>.
+			</summary>
+			<remarks>
+				Identical to invoking <c>new Icod.Threading.AsynchronousLock&lt;L&gt;( new L() )</c>
+			</remarks>
+		</member>
+		<member name="#ctor(L)">
+			<summary>
+				Creates a new <see cref="T:Icod.Threading.AsynchronousLock`1">Icod.Threading.AsynchronousLock</see>, wrapping <paramref name="theLock" /> into the <abbr title="Asynchronous Programming Model">APM</abbr>.
+			</summary>
+			<param name="theLock">
+				An existing <see cref="T:Icod.Threading.SynchronousLockBase">Icod.Threading.SynchronousLockBase</see> object to use for all synchronized (lock) operations.
+			</param>
+			<exception cref="T:System.NullArgumentException">
+				Thrown if <paramref name="theLock"/> is <c>null</c>.
+			</exception>
+		</member>
+	</type>
+
+	<type name="Icod.Threading.ISynchronousSharedLock">
+		<member name="">
+			<summary>The required pubic implementation for all synchronous, multi-reader/single-writer lock mechanisms.</summary>
+		</member>
+		<member name="Read">
+			<summary>Enters shared context.</summary>
+			<returns>
+				A <see cref="T:System.IDisposable">System.IDisposable</see> lock-cookie, which retains the lock until <see cref="M:System.IDisposable.Dispose">Dispose</see> is invoked.
+			</returns>
+		</member>
+		<member name="Write">
+			<summary>Enters exclusive context.</summary>
+			<returns>
+				A <see cref="T:System.IDisposable">System.IDisposable</see> lock-cookie, which retains the lock until <see cref="M:System.IDisposable.Dispose">Dispose</see> is invoked.
+			</returns>
+		</member>
+	</type>
+	<type name="Icod.Threading.IAsynchronousSharedLock">
+		<member name="">
+			<summary>The required pubic implementation for all asynchronous, multi-reader/single-writer lock mechanisms.</summary>
+		</member>
+		<member name="BeginWrite(System.AsyncCallback,System.Object)">
+			<summary>Asynchronously enters exclusive-Write sycnrhonization context (lock).</summary>
+			<param name="callback">
+				The <see cref="T:System.AsyncCallback">System.AsyncCallback</see> to be invoked when the lock is acquired.
+			</param>
+			<param name="state">
+				The user-provided <see cref="T:System.Object">object</see> that distinguishes this particular asynchronous request from other requests.
+			</param>
+			<returns>
+				<para>
+					A <see cref="T:System.IAsyncResult">System.IAsyncResult</see> that represents the asynchronous operation, which could still be pending.
+				</para>
+				<para>
+					Following the <abbr title="Asynchronous Programming Model">APM</abbr>,
+					the status of the operation may be monitored via the <paramref name="callback" />,
+					or the returned <see cref="T:System.IAsyncResult">System.IAsyncResult</see>'s <see cref="P:System.IAsyncResult.WaitHandle">System.IAsyncResult.WaitHandle</see>
+					and <see cref="P:System.IAsyncResult.IsCompleted">System.IAsyncResult.IsCompleted</see> properties.
+				</para>
+			</returns>
+		</member>
+		<member name="BeginRead(System.AsyncCallback,System.Object)">
+			<summary>Asynchronously enters shared-Read sycnrhonization context (lock).</summary>
+			<param name="callback">
+				The <see cref="T:System.AsyncCallback">System.AsyncCallback</see> to be invoked when the lock is acquired.
+			</param>
+			<param name="state">
+				The user-provided <see cref="T:System.Object">object</see> that distinguishes this particular asynchronous request from other requests.
+			</param>
+			<returns>
+				<para>
+					A <see cref="T:System.IAsyncResult">System.IAsyncResult</see> that represents the asynchronous operation, which could still be pending.
+				</para>
+				<para>
+					Following the <abbr title="Asynchronous Programming Model">APM</abbr>,
+					the status of the operation may be monitored via the <paramref name="callback" />,
+					or the returned <see cref="T:System.IAsyncResult">System.IAsyncResult</see>'s <see cref="P:System.IAsyncResult.WaitHandle">System.IAsyncResult.WaitHandle</see>
+					and <see cref="P:System.IAsyncResult.IsCompleted">System.IAsyncResult.IsCompleted</see> properties.
+				</para>
+			</returns>
+		</member>
+		<member name="EndWrite(System.IAsyncResult)">
+			<summary>Waits for the pending asynchronous lock to complete.</summary>
+			<param name="result">
+				The <see cref="System.IAsyncResult">System.IAsyncResult</see> returned by the <see cref="M:Icod.Threading.SharedLock.BeginWrite(System.AsyncCallback,System.Object)">BeginWrite</see> request.
+			</param>
+			<returns>
+				A <see cref="T:System.IDisposable">System.IDisposable</see> lock-cookie, which retains the lock until <see cref="M:System.IDisposable.Dispose">Dispose</see> is invoked.
+			</returns>
+			<remarks>
+				If the operation started by the invocation to <see cref="M:Icod.Threading.SharedLock.BeginWrite(System.AsyncCallback,System.Object)">BeginWrite</see> has yet to complete,
+				this method will block until the operation is completed; otherwise, it returns immediately,
+				setting the <see cref="P:System.IAsyncResult.IsCompleted">System.IAsyncResult.IsCompleted</see> property accordingly and throwing
+				any exceptions which may have been raised during the asynchronous execution.
+			</remarks>
+		</member>
+		<member name="EndRead(System.IAsyncResult)">
+			<summary>Waits for the pending asynchronous lock to complete.</summary>
+			<param name="result">
+				The <see cref="System.IAsyncResult">System.IAsyncResult</see> returned by the <see cref="M:Icod.Threading.SharedLock.BeginRead(System.AsyncCallback,System.Object)">BeginRead</see> request.
+			</param>
+			<returns>
+				A <see cref="T:System.IDisposable">System.IDisposable</see> lock-cookie, which retains the lock until <see cref="M:System.IDisposable.Dispose">Dispose</see> is invoked.
+			</returns>
+			<remarks>
+				If the operation started by the invocation to <see cref="M:Icod.Threading.SharedLock.BeginRead(System.AsyncCallback,System.Object)">BeginRead</see> has yet to complete,
+				this method will block until the operation is completed; otherwise, it returns immediately,
+				setting the <see cref="P:System.IAsyncResult.IsCompleted">System.IAsyncResult.IsCompleted</see> property accordingly and throwing
+				any exceptions which may have been raised during the asynchronous execution.
+			</remarks>
+		</member>
+	</type>
+	<type name="Icod.Threading.SharedLock">
+		<member name="">
+			<summary>A locking mechanism supporting multiple shared- and exclusive-mode context.</summary>
+			<threadsafety instance="true" static="true" />
+			<remarks>
+				The two locks necessary to support this mechanism are, in the interests of reliability, kernel-mode locking mechanisms.
+				<para>
+					This implementation does not support recursion.
+					Any thread can release a context granted to another thread;
+					indeed there are numerous examples of where this sort of behaviour is desired.
+					Because of this, a thread cannot simply <q>upgrade</q> or <q>downgrade</q> between shared- and exclusive-mode contexts.
+					To switch contexts, a thread must first release the current context before requesting the other context.
+					This is particularly important when in exclusive-context.
+					A thread in exclusive-context attempting to acquire shared-context w/o releasing it's current context would block itself! 
+					Likewise, a thread operating in shared-context seeking to enter exclusive-context would block itself if it did not first release the current shared-context.  
+				</para>
+				<para>
+					This implentation of the <see cref="Icod.Threading.IAsynchronousSharedLock">Icod.Threading.IAsynchronousSharedLock</see>
+					gives priority to threads requesting exclusive- over shared-context, 
+					but there is not guaranteed order in their scheduling, such as <acronym title="First-In/Last-Out">FIFO</acronym> or <acronym title="Last-In/First-Out">LIFO</acronym>.
+					Waiting threads requesting exclusive-context will be released before all other threads, and will be release just one at a time, but in no particular order beyond this.  
+				</para>
+				<list type="bullet">
+					<item>
+						<description>
+							When one thread is executing in exclusive-context, no other thread may execute in exclusive-context.  
+						</description>
+					</item>
+					<item>
+						<description>
+							When one thread is executing in exclusive-context, no other thread may execute in shared-context.  
+						</description>
+					</item>
+					<item>
+						<description>
+							When at least one thread is in shared-context, no thread may operate in exclusive-context.  
+						</description>
+					</item>
+					<item>
+						<description>
+							When one thread is is in shared-context, other threads may also be in shared-context.  
+						</description>
+					</item>
+				</list>
+			</remarks>
+			<example>
+				Exclusive-context self-blocking a shared-context request.
+				<code>
+private void foo() { 
+	// follow the using ( ... ) { ... } pattern to ensure all disposables are disposed, when possible
+	using ( Icod.Threading.SharedLock bar = new Icod.Threading.SharedLock() ) { 
+		using ( bar.Write() ) { 
+			// any future reads will now block
+			using ( bar.Read() ) { 
+				// we will never enter here because (as above) all future reads will block!
+			}
+		}
+	}
+}
+				</code>
+			</example>
+			<example>
+				Shared-context self-blocking an exclusive-context request.
+				<code>
+private void foo() { 
+	// follow the using ( ... ) { ... } pattern to ensure all disposables are disposed, when possible
+	using ( Icod.Threading.SharedLock bar = new Icod.Threading.SharedLock() ) { 
+		using ( bar.Read() ) { 
+			// any future writes will now block
+			using ( bar.Write() ) { 
+				// we will never enter here because (as above) all future writes will block!
+			}
+		}
+	}
+}
+				</code>
+			</example>
+		</member>
+		<member name="#ctor">
+			<summary>Creates a new instance of a kernel-mode shared-Read/exclusive-Write locking mechanism.</summary>
+		</member>
+		<member name="#dtor">
+			<summary>
+				Allows the <see cref="T:Icod.Threading.SharedLock">Icod.Threading.SharedLock</see> to attempt to free resources and perform other cleanup operations before the <see cref="T:Icod.Threading.SharedLock">Icod.Threading.SharedLock</see> is reclaimed by garbage collection.
+			</summary>
+			<seealso cref="M:System.Object.Finalize" />
+			<seealso cref="T:System.IDisposable" />
+		</member>
+	</type>
+
+	<type name="Icod.Threading.Interlocked">
+		<member name="">
+			<summary>Convenience class for the most common interlocked operations.</summary>
+			<threadsafety instance="true" static="true" />
+			<remarks>Interlocked operations are atomic; they are never interrupted no matter how complex the operation or how many threads are executing.</remarks>
+		</member>
+		<member name="Add(System.Int32@,System.Int32)">
+			<summary>
+				Adds two 32-bit integers and replaces the first integer with the sum, as an atomic operation.
+			</summary>
+			<param name="value">
+				A variable containing the first value to be added. The sum of the two values is stored in <paramref name="value" />.
+			</param>
+			<param name="with">
+				The value to be added to the integer at <paramref name="value" />.
+			</param>
+			<returns>
+				The value of <paramref name="value"/> before the addition.
+			</returns>
+			<remarks>
+				<para>
+					This method handles an overflow condition by wrapping:
+					if  <paramref name="value"/> is <c>Int32.MaxValue</c> and <paramref name="with"/> is <c>1</c>, the result is <c>Int32.MinValue</c>;
+					if <paramref name="with"/> is 2, the result is <c>( Int32.MinValue + 1 )</c>;
+					and so on.
+					No exception is thrown.
+				</para>
+				<para>
+					Since multiple threads may be accessing <paramref name="value"/>, each attempting various operations on it,
+					the value returned may not be the same as supplied <paramref name="value"/>, but the value at the instant before the operation succeeds.
+					The operation will spin in user-space unless and until the operation can successfully and correctly complete.
+				</para>
+			</remarks>
+			<seealso cref="M:System.Threading.Interlocked.CompareExchange(System.Int32,System.Int32)"/>
+		</member>
+		<member name="Increment(System.Int32@)">
+			<summary>
+				Increments a <see cref="T:System.Int32">System.Int32</see>.
+			</summary>
+			<remarks>
+				Merely a wrapper to <see cref="M:System.Threading.Interlocked.Increment(System.Int32@)">System.Threading.Interlocked.Increment( ref System.Int32 )</see>.
+			</remarks>
+		</member>
+		<member name="Increase(System.Int32@)">
+			<summary>Increases a <see cref="T:System.Int32">System.Int32</see>.</summary>
+			<remakrs>Performs a left-shift and sets the low-order bit.</remakrs>
+			<seealso cref="M:Icod.Threading.Interlocked.LeftShift(System.Int32@)" />
+			<seealso cref="M:Icod.Threading.Interlocked.Or(System.Int32@)" />
+		</member>
+		<member name="Subtract(System.Int32@,System.Int32)">
+			<summary>
+				Subtracts the second 32-bit integer from the first and replaces the first integer with the difference, as an atomic operation.  
+			</summary>
+			<param name="value">
+				A variable containing the first value from which the second is to be subtracted. The difference of the two values is stored in <paramref name="value"/>.
+			</param>
+			<param name="with">
+				The value to be subtracted from the integer at <paramref name="value"/>.
+			</param>
+			<returns>
+				The value of <paramref name="value"/> before the subtraction.
+			</returns>
+			<remarks>
+				<para>
+				This method handles an overflow condition by wrapping: 
+				if  <paramref name="value"/> is <c>Int32.MinValue</c> and <paramref name="with"/> is <c>1</c>, the result is <c>Int32.MaxValue</c>; 
+				if <paramref name="with"/> is 2, the result is <c>( Int32.MaxValue - 1 )</c>; 
+					and so on.  
+				No exception is thrown.  
+				</para>
+				<para>
+				Since multiple threads may be accessing <paramref name="value"/>, each attempting various operations on it, 
+					the value returned may not be the same as supplied <paramref name="value"/>, but the value at the instant before the operation succeeds.  
+				The operation will spin in user-space unless and until the operation can successfully and correctly complete.  
+				</para>
+			</remarks>
+			<seealso cref="M:System.Threading.Interlocked.CompareExchange(System.Int32,System.Int32)"/>
+			<seealso cref="M:Icod.Threading.Interlocked.Add(System.Int32@,System.Int32)" />
+		</member>
+		<member name="Decrement(System.Int32@)">
+			<summary>
+				Decrements a <see cref="T:System.Int32">System.Int32</see>.
+			</summary>
+			<remarks>Merely a wrapper to <see cref="M:System.Threading.Interlocked.Decrement(System.Int32@)">System.Threading.Interlocked.Decrement( ref System.Int32 )</see>.</remarks>
+		</member>
+		<member name="Decrease(System.Int32@)">
+			<summary>
+				Decreases a <see cref="T:System.Int32">System.Int32</see>.
+			</summary>
+			<remakrs>Performs a right-shift.</remakrs>
+			<seealso cref="M:Icod.Threading.Interlocked.RightShift(System.Int32@)" />
+		</member>
+		<member name="Multiply(System.Int32@,System.Int32)">
+			<summary>
+				Multiplies two 32-bit integers and replaces the first integer with the product, as an atomic operation.
+			</summary>
+			<param name="value">
+				A variable containing the first value to be multiplied. The sum of the two values is stored in <paramref name="value"/>.
+			</param>
+			<param name="with">
+				The value to be multiplied to the integer at <paramref name="value"/>.
+			</param>
+			<returns>
+				The value of <paramref name="value"/> before the multiplication.
+			</returns>
+			<remarks>
+				Since multiple threads may be accessing <paramref name="value"/>, each attempting various operations on it, 
+					the value returned may not be the same as supplied <paramref name="value"/>, but the value at the instant before the operation succeeds.  
+				The operation will spin in user-space unless and until the operation can successfully and correctly complete.  
+			</remarks>
+			<seealso cref="M:System.Threading.Interlocked.CompareExchange(System.Int32,System.Int32)"/>
+		</member>
+		<member name="Divide(System.Int32@,System.Int32)">
+			<summary>
+				Divides the first 32-bit integer by the second and replaces the first integer with the quotient, as an atomic operation.  
+			</summary>
+			<param name="value">
+				A variable containing the first value to be divided. The sum of the two values is stored in <paramref name="value"/>.
+			</param>
+			<param name="with">
+				The value to divide to the integer at <paramref name="value"/>.
+			</param>
+			<returns>
+				The value of <paramref name="value"/> before the division.
+			</returns>
+			<remarks>
+				Since multiple threads may be accessing <paramref name="value"/>, each attempting various operations on it, 
+					the value returned may not be the same as supplied <paramref name="value"/>, but the value at the instant before the operation succeeds.  
+				The operation will spin in user-space unless and until the operation can successfully and correctly complete.  
+			</remarks>
+			<seealso cref="M:System.Threading.Interlocked.CompareExchange(System.Int32,System.Int32)"/>
+		</member>
+		<member name="And(System.Int32@,System.Int32)">
+			<summary>
+				Performs a bit-wise <c>and</c> operation on two 32-bit integers and replaces the first integer with the result, as an atomic operation.
+			</summary>
+			<param name="value">
+				A variable containing the first value to be anded. The intersection of the two values is stored in <paramref name="value"/>.
+			</param>
+			<param name="with">
+				The value to be anded with the integer at <paramref name="value"/>.
+			</param>
+			<returns>
+				The value of <paramref name="value"/> before the intersection.
+			</returns>
+			<remarks>
+				Since multiple threads may be accessing <paramref name="value"/>, each attempting various operations on it, 
+					the value returned may not be the same as supplied <paramref name="value"/>, but the value at the instant before the operation succeeds.  
+				The operation will spin in user-space unless and until the operation can successfully and correctly complete.  
+			</remarks>
+			<seealso cref="M:System.Threading.Interlocked.CompareExchange(System.Int32,System.Int32)"/>
+		</member>
+		<member name="Or(System.Int32@,System.Int32)">
+			<summary>
+				Performs a bit-wise <c>or</c> operation on two 32-bit integers and replaces the first integer with the result, as an atomic operation.
+			</summary>
+			<param name="value">
+				A variable containing the first value to be ored. The union of the two values is stored in <paramref name="value"/>.
+			</param>
+			<param name="with">
+				The value to be ored with the integer at <paramref name="value"/>.
+			</param>
+			<returns>
+				The value of <paramref name="value"/> before the union.
+			</returns>
+			<remarks>
+				Since multiple threads may be accessing <paramref name="value"/>, each attempting various operations on it, 
+					the value returned may not be the same as supplied <paramref name="value"/>, but the value at the instant before the operation succeeds.  
+				The operation will spin in user-space unless and until the operation can successfully and correctly complete.  
+			</remarks>
+			<seealso cref="M:System.Threading.Interlocked.CompareExchange(System.Int32,System.Int32)"/>
+		</member>
+		<member name="Xor(System.Int32@,System.Int32)">
+			<summary>
+				Performs a bit-wise xor operation on two 32-bit integers and replaces the first integer with the result, as an atomic operation.
+			</summary>
+			<param name="value">
+				A variable containing the first value to be xored. The symetric-difference of the two values is stored in <paramref name="value"/>.
+			</param>
+			<param name="with">
+				The value to be xored with the integer at <paramref name="value"/>.
+			</param>
+			<returns>
+				The value of <paramref name="value"/> before the symetric-difference computation.
+			</returns>
+			<remarks>
+				Since multiple threads may be accessing <paramref name="value"/>, each attempting various operations on it, 
+					the value returned may not be the same as supplied <paramref name="value"/>, but the value at the instant before the operation succeeds.  
+				The operation will spin in user-space unless and until the operation can successfully and correctly complete.  
+			</remarks>
+			<seealso cref="M:System.Threading.Interlocked.CompareExchange(System.Int32,System.Int32)"/>
+		</member>
+		<member name="ShiftRight(System.Int32@,System.Int32)">
+			<summary>
+				Performs a right-shift operation on two 32-bit integers and replaces the first integer with the result, as an atomic operation.
+			</summary>
+			<param name="value">
+				A variable containing the value to right-shifted. The result of the right-shift is stored in <paramref name="value"/>.
+			</param>
+			<param name="with">
+				The degree of shift for the integer at <paramref name="value"/>.
+			</param>
+			<returns>
+				The value of <paramref name="value"/> before the right-shift operation.
+			</returns>
+			<remarks>
+				Since multiple threads may be accessing <paramref name="value"/>, each attempting various operations on it, 
+					the value returned may not be the same as supplied <paramref name="value"/>, but the value at the instant before the operation succeeds.  
+				The operation will spin in user-space unless and until the operation can successfully and correctly complete.  
+			</remarks>
+			<seealso cref="M:System.Threading.Interlocked.CompareExchange(System.Int32,System.Int32)"/>
+		</member>
+		<member name="ShiftLeft(System.Int32@,System.Int32)">
+			<summary>
+				Performs a left-shift operation on two 32-bit integers and replaces the first integer with the result, as an atomic operation.
+			</summary>
+			<param name="value">
+				A variable containing the value to left-shifted. The result of the left-shift is stored in <paramref name="value" />.
+			</param>
+			<param name="with">
+				The degree of shift for the integer at <paramref name="value" />.
+			</param>
+			<returns>
+				The value of <paramref name="value" /> before the left-shift operation.
+			</returns>
+			<remarks>
+				Since multiple threads may be accessing <paramref name="value" />, each attempting various operations on it, 
+					the value returned may not be the same as supplied <paramref name="value" />, but the value at the instant before the operation succeeds.  
+				The operation will spin in user-space unless and until the operation can successfully and correctly complete.  
+			</remarks>
+			<seealso cref="M:System.Threading.Interlocked.CompareExchange(System.Int32,System.Int32)"/>
+		</member>
+		<member name="ExchangeCompare(System.Int32@,System.Int32,System.Int32)">
+			<summary>
+				Replaces <paramref name="target" /> with <paramref name="value" /> if <paramref name="target" />
+				is value-equal to <paramref name="condition" />.
+			</summary>
+			<param name="target">
+				The address to replace with <paramref name="value" />, if and only if, <paramref name="target" /> value-equals <paramref name="condition" />.
+			</param>
+			<param name="value">
+				The value to assign to the address at <paramref name="target" /> if, and only if, <paramref name="target" /> value-equals <paramref name="condition" />.
+			</param>
+			<param name="condition">
+				The value with which to compare to <paramref name="target" />.
+			</param>
+		</member>
+		<member name="ExchangeCompare`3(`0@,`1,`2)">
+			<summary>
+				Replaces <paramref name="target" /> with <paramref name="value" /> if <paramref name="target" />
+				is reference-equal to <paramref name="condition" />.
+			</summary>
+			<typeparam name="O">
+				A refernce-type.
+			</typeparam>
+			<param name="target">
+				The address to replace with <paramref name="value" />, if and only if, <paramref name="target" /> reference-equals <paramref name="condition" />.
+			</param>
+			<param name="value">
+				The value to assign to the address at <paramref name="target" /> if, and only if, <paramref name="target" /> reference-equals <paramref name="condition" />.
+			</param>
+			<param name="condition">
+				The value with which to compare to <paramref name="target" />.
+			</param>
+		</member>
+	</type>
+</types>
