@@ -10,7 +10,6 @@ using System.Runtime.InteropServices;
 // you compile.
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant( true )]
-[assembly: Icod.Author( @"Timothy J. ``Flytrap'' Bruce" )]
 [assembly: Icod.ReportBugsTo( "uniblab@hotmail.com" )]
 [assembly: Icod.LgplLicense]
 

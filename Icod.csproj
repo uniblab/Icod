@@ -20,35 +20,27 @@
 -->
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<OutputType>Library</OutputType>
-		<!--<TargetFrameworks>net20;net30;net35;net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;net481;netstandard20;netstandard2.1;net5.0;net6.0;net7.0;net8.0;net9.0</TargetFrameworks>-->
-		<TargetFrameworks>net9.0</TargetFrameworks>
-
 		<RootNamespace>Icod</RootNamespace>
 		<AssemblyName>Icod</AssemblyName>
 		<ProjectGuid>{5F3FC1A8-F3DA-4968-970C-233F3EAD5A8F}</ProjectGuid>
-		<OutputPath>bin\$(Configuration)\</OutputPath>
-		<DocumentationFile>$(OutDir)\$(Configuration)\$(TargetFrameworkVersion)\$(AssemblyName).XML</DocumentationFile>
-		<StartupObject />
-		<TargetFrameworkProfile></TargetFrameworkProfile>
-		<FileAlignment>512</FileAlignment>
-		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-		<Platform>AnyCPU</Platform>
-		<Configurations>Debug;Staging;Release</Configurations>
-		<PackageIcon>icon.png</PackageIcon>
-		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-		<Configuration Condition=" '$(Platform)' == '' ">AnyCPU</Configuration>
-	</PropertyGroup>
-	<PropertyGroup>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>Icod Root Library</Title>
-		<Authors>Timothy J. Bruce</Authors>
 		<Description>Root library for Icod applications, services, and libraries.</Description>
 		<Copyright>Copyright (c) 2025 Timothy J. Bruce</Copyright>
+		<RepositoryType>git</RepositoryType>
 		<PackageProjectUrl>https://github.com/uniblab/Icod</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/uniblab/Icod</RepositoryUrl>
-		<RepositoryType>git</RepositoryType>
-		<PackageTags>library</PackageTags>
+		<PackageTags></PackageTags>
+		<FileVersion>2.0.0.0</FileVersion>
+		<AssemblyVersion>2.0.0.0</AssemblyVersion>
+		<PackageVersion>2.0.0</PackageVersion>
+		<PackageReleaseNotes>Major revision and uplift, supporting many different platforms.</PackageReleaseNotes>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Authors>Timothy J. Bruce</Authors>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -56,17 +48,23 @@
 		<IncludeContentInPack>true</IncludeContentInPack>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<FileVersion>2.0.0.0</FileVersion>
-		<AssemblyVersion>2.0.0.0</AssemblyVersion>
-		<PackageVersion>2.0.0</PackageVersion>
-		<PackageReleaseNotes>Major revision and uplift, supporting many different platforms.</PackageReleaseNotes>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<TargetFrameworks>net20;net30;net35;net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;net481;netstandard20;netstandard2.1;net5.0;net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
+		<OutputType>Library</OutputType>
+		<OutputPath>bin\$(Configuration)\</OutputPath>
+		<DocumentationFile>$(OutDir)\$(Configuration)\$(TargetFrameworkVersion)\$(AssemblyName).XML</DocumentationFile>
+		<StartupObject />
+		<TargetFrameworkProfile></TargetFrameworkProfile>
+		<FileAlignment>512</FileAlignment>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+		<Configuration Condition=" '$(Platform)' == '' ">AnyCPU</Configuration>
 		<Configurations>Debug;Release;Staging</Configurations>
 		<SignAssembly>false</SignAssembly>
 	</PropertyGroup>
 
-	<PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
-		<PlatformTarget>AnyCPU</PlatformTarget>
-	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
 		<ErrorReport>prompt</ErrorReport>
 		<WarningLevel>2</WarningLevel>
@@ -103,17 +101,34 @@
 		<None Include="doc\Icod.Threading.xml" />
 		<None Include="doc\Icod.xml" />
 	</ItemGroup>
-	<ItemGroup>
-		<None Include="images\icon.png" Pack="true" PackagePath="/" />
-	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="LICENSE" CopyToOutputDirectory="Always" />
+		<Content Include="README.md" CopyToOutputDirectory="Always">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</Content>
+		<Content Include="LICENSE" CopyToOutputDirectory="Always">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</Content>
+		<None Include="icon.png" Pack="true" PackagePath="" />
 	</ItemGroup>
-	<Target Name="RmLicense" AfterTargets="Clean" Condition=" '$(OutDir)' != '' ">
-		<Delete ContinueOnError="false" Files="$(OutDir)\$(AssemblyName).License.txt" />
+	<Target Name="RmContent" AfterTargets="Clean" Condition=" '$(OutDir)' != '' ">
+		<Delete ContinueOnError="false"
+			Files="$(OutDir)\$(AssemblyName).License.txt"
+		/>
+		<Delete ContinueOnError="false"
+			Files="$(OutDir)\$(AssemblyName).ReadMe.md"
+		/>
 	</Target>
-	<Target Name="MvLicense" AfterTargets="Build" Condition=" '$(OutDir)' != '' ">
-		<Move ContinueOnError="false" SourceFiles="$(OutDir)\LICENSE" DestinationFiles="$(OutDir)\$(AssemblyName).License.txt" />
+	<Target Name="MvContent" AfterTargets="Build" Condition=" '$(OutDir)' != '' ">
+		<Move ContinueOnError="false"
+			SourceFiles="$(OutDir)\LICENSE"
+			DestinationFiles="$(OutDir)\$(AssemblyName).License.txt"
+		/>
+		<Move ContinueOnError="false"
+			SourceFiles="$(OutDir)\README.md"
+			DestinationFiles="$(OutDir)\$(AssemblyName).ReadMe.md"
+		/>
 	</Target>
 </Project>
