@@ -8,9 +8,6 @@ using System.Runtime.InteropServices;
 //
 // change them to the information which is associated with the assembly
 // you compile.
-[assembly: AssemblyDescription("root library for all Icod applications, services, and libraries")]
-[assembly: AssemblyCopyright("copyright (c) 2025")]
-[assembly: AssemblyTrademark("Icod is a registered trademark of the International Cabal of Diabolists")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant( true )]
 [assembly: Icod.Author( @"Timothy J. ``Flytrap'' Bruce" )]
