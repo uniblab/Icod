@@ -29,7 +29,7 @@
 		<RepositoryType>git</RepositoryType>
 		<PackageProjectUrl>https://github.com/uniblab/Icod</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/uniblab/Icod</RepositoryUrl>
-		<PackageTags>library, util</PackageTags>
+		<PackageTags>library, util, framework</PackageTags>
 		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 		<OutputType>Library</OutputType>
 		<StartupObject />
