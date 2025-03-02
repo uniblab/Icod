@@ -24,7 +24,8 @@ directly in the binary.  These should be used in conjuction with the standard
 comment-boilerplate in the source code.
 
 ## Copyright and Licensing
-Icod.Argh is a command-line arguments handler and processor.
+Icod is a library of serialization, threading, APM, and licensing 
+helpers.
 Copyright (C) 2025 Timothy J. Bruce
 
 This library is free software; you can redistribute it and/or
