@@ -14,10 +14,7 @@ namespace Icod.Threading {
 		#region .ctor
 		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.LockExit"]/member[@name="#ctor"]/*'/>
 		public LockExit( Icod.Threading.LockExitHandler exit ) { 
-			if ( null == exit ) { 
-				throw new System.ArgumentNullException( "exit" );
-			}
-			myExit = exit;
+			myExit = exit ?? throw new System.ArgumentNullException( nameof( exit ) );
 			System.Runtime.CompilerServices.RuntimeHelpers.PrepareDelegate( myExit );
 		}
 		#endregion .ctor
@@ -25,20 +22,13 @@ namespace Icod.Threading {
 
 		#region methods
 		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.ISynchronousLock"]/member[@name="Exit"]/*'/>
-		[System.Runtime.ConstrainedExecution.PrePrepareMethod]
 		public void Dispose() { 
 			this.Dispose( true );
 			System.GC.SuppressFinalize( this );
 		}
 
 		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.ISynchronousLock"]/member[@name="Exit"]/*'/>
-		[System.Runtime.ConstrainedExecution.PrePrepareMethod]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage( 
-			"Microsoft.Design", 
-			"CA1047:DoNotDeclareProtectedMembersInSealedTypes", 
-			Justification = "The method should be protected in event class is ever unsealed." 
-		)]
-		protected void Dispose( System.Boolean disposing ) { 
+		private void Dispose( System.Boolean disposing ) { 
 			if ( true == disposing ) { 
 				System.Threading.Thread.BeginCriticalRegion();
 				if ( null != myExit ) { 

@@ -7,7 +7,8 @@ namespace Icod.Threading {
 	public class Lock<L> : ISynchronousLock where L : class, ISynchronousLock, new() { 
 
 		#region fields
-		private L myLock;
+		private System.Boolean myIsDisposed = false;
+		private readonly L myLock;
 		#endregion fields
 
 
@@ -18,11 +19,9 @@ namespace Icod.Threading {
 
 		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.Lock`1"]/member[@name="#ctor(L)"]/*'/>
 		public Lock( L theLock ) { 
-			if ( null == theLock ) { 
-				throw new System.ArgumentNullException( "theLock" );
-			}
-			myLock = theLock;
+			myLock = theLock ?? throw new System.ArgumentNullException( nameof( theLock ) );
 		}
+		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.Lock`1"]/member[@name="#dtor"]/*'/>
 		~Lock() { 
 			this.Dispose( false );
 		}
@@ -31,9 +30,6 @@ namespace Icod.Threading {
 
 		#region methods
 		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.ISynchronousLock"]/member[@name="Enter"]/*'/>
-		void ISynchronousLock.Enter() {
-			this.Enter();
-		}
 		public void Enter() { 
 			if ( null == myLock ) { 
 				throw new System.InvalidOperationException();
@@ -41,9 +37,6 @@ namespace Icod.Threading {
 			myLock.Enter();
 		}
 
-		void ISynchronousLock.Exit() { 
-			this.Exit();
-		}
 		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.ISynchronousLock"]/member[@name="Exit"]/*'/>
 		public void Exit() {
 			if ( null == myLock ) {
@@ -58,19 +51,19 @@ namespace Icod.Threading {
 			return new LockExit( myLock.Exit );
 		}
 
-		[System.Runtime.ConstrainedExecution.PrePrepareMethod]
+		/// <include file='..\..\doc\Icod.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose"]/*'/>
 		public void Dispose() { 
 			this.Dispose( true );
 			System.GC.SuppressFinalize( this );
 		}
-		[System.Runtime.ConstrainedExecution.PrePrepareMethod]
+		/// <include file='..\..\doc\Icod.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose(System.Boolean)"]/*'/>
 		protected void Dispose( System.Boolean disposing ) { 
 			if ( true == disposing ) { 
 				System.Threading.Thread.BeginCriticalRegion();
-				if ( null != myLock ) { 
-					myLock.Dispose();
-					myLock = null;
+				if ( !myIsDisposed ) {
+					myLock?.Dispose();
 				}
+				myIsDisposed = true;
 				System.Threading.Thread.EndCriticalRegion();
 			}
 		}

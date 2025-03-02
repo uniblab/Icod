@@ -234,6 +234,11 @@ namespace Example {
 				Thrown if <paramref name="theLock"/> is <c>null</c>.
 			</exception>
 		</member>
+		<member name="#dtor">
+			<summary>Allows the lock to try to free resources before it is reclaimed by garbage collection.</summary>
+			<seealso cref="T:Icod.Threading.Lock`1" />
+			<seealso cref="M:System.Object.Finalize" />
+		</member>
 		<member name="Acquire">
 			<summary>Returns a synchronized (lock) context cookie.</summary>
 			<returns>
@@ -256,6 +261,26 @@ using ( myLockObject.Acquire() ) {
 //    invoked
 				</code>
 			</example>
+		</member>
+		<member name="Dispose">
+			<summary>
+				Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+			</summary>
+		</member>
+		<member name="Dispose(System.Boolean)">
+			<summary>
+				Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+			</summary>
+			<param name="disposing">
+				If disposing equals true, the method has been called directly or indirectly by a user's code.
+				Managed and unmanaged resources can be disposed.
+				If disposing equals false, the method has been called by the runtime from inside the finalizer
+				and you should not reference other objects.
+				Only unmanaged resources can be disposed.
+			</param>
+			<remarks>
+				Releases all locks.  Behavior at this point is undefined.
+			</remarks>
 		</member>
 	</type>
 
@@ -284,9 +309,6 @@ using ( myLockObject.Acquire() ) {
 		</member>
 		<member name="EndInvoke">
 			<summary>Waits for the pending asynchronous read to complete.</summary>
-			<returns>
-				The results, <typeparamref name="R" />, of the operation.
-			</returns>
 		</member>
 	</type>
 
@@ -341,7 +363,7 @@ using ( myLockObject.Acquire() ) {
 			<remarks>
 				<typeparamref name="L">L</typeparamref> must be derived from <see cref="T:Icod.Threading.SynchronousLockBase">Icod.Threading.SynchronousLockBase</see>.
 			</remarks>
-			<seealso cref="T:Icod.Threading.Lock" />
+			<seealso cref="T:Icod.Threading.Lock`1" />
 		</member>
 		<member name="#ctor">
 			<summary>
@@ -361,6 +383,10 @@ using ( myLockObject.Acquire() ) {
 			<exception cref="T:System.NullArgumentException">
 				Thrown if <paramref name="theLock"/> is <c>null</c>.
 			</exception>
+		</member>
+		<member name="#dtor">
+			<summary>Allows the lock to try to free resources before it is reclaimed by garbage collection.</summary>
+			<seealso cref="T:Icod.Threading.Lock`1" />
 		</member>
 	</type>
 
@@ -548,9 +574,38 @@ private void foo() {
 
 	<type name="Icod.Threading.Interlocked">
 		<member name="">
-			<summary>Convenience class for the most common interlocked operations.</summary>
+			<summary>Provides atomic operations for variables that are shared by multiple threads.</summary>
 			<threadsafety instance="true" static="true" />
 			<remarks>Interlocked operations are atomic; they are never interrupted no matter how complex the operation or how many threads are executing.</remarks>
+		</member>
+		<member name="Add(System.Int64@,System.Int64)">
+			<summary>
+				Adds two 64-bit integers and replaces the first integer with the sum, as an atomic operation.
+			</summary>
+			<param name="value">
+				A variable containing the first value to be added. The sum of the two values is stored in <paramref name="value" />.
+			</param>
+			<param name="with">
+				The value to be added to the integer at <paramref name="value" />.
+			</param>
+			<returns>
+				The value of <paramref name="value"/> before the addition.
+			</returns>
+			<remarks>
+				<para>
+					This method handles an overflow condition by wrapping:
+					if  <paramref name="value"/> is <c>Int64.MaxValue</c> and <paramref name="with"/> is <c>1</c>, the result is <c>Int64.MinValue</c>;
+					if <paramref name="with"/> is 2, the result is <c>( Int64.MinValue + 1 )</c>;
+					and so on.
+					No exception is thrown.
+				</para>
+				<para>
+					Since multiple threads may be accessing <paramref name="value"/>, each attempting various operations on it,
+					the value returned may not be the same as supplied <paramref name="value"/>, but the value at the instant before the operation succeeds.
+					The operation will spin in user-space unless and until the operation can successfully and correctly complete.
+				</para>
+			</remarks>
+			<seealso cref="M:System.Threading.Interlocked.CompareExchange(System.Int32,System.Int32)"/>
 		</member>
 		<member name="Add(System.Int32@,System.Int32)">
 			<summary>

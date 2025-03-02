@@ -30,10 +30,6 @@ namespace Icod.Data {
 		}
 
 		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataStore`1"]/member[@name="Finalize"]/*'/>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage( "Microsoft.Design", 
-			"CA1063:ImplementIDisposableCorrectly", 
-			Justification = "the analysis suggests I do *exactly* as I am doing" 
-		)]
 		~DataStore() { 
 			this.Dispose( false );
 		}
@@ -64,17 +60,13 @@ namespace Icod.Data {
 
 
 		#region methods
-		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataStore`1"]/member[@name="Dispose"]/*'/>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage( "Microsoft.Design", 
-			"CA1063:ImplementIDisposableCorrectly", 
-			Justification = "the analysis suggests I do *exactly* as I am doing" 
-		)]
+		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose"]/*'/>
 		public void Dispose() { 
 			this.Dispose( true );
 			System.GC.SuppressFinalize( this );
 		}
 
-		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataStore`1"]/member[@name="Dispose(System.Boolean)"]/*'/>
+		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose(System.Boolean)"]/*'/>
 		protected virtual void Dispose( System.Boolean disposing ) { 
 			lock ( this ) { 
 				if ( false == this.IsDisposed ) { 

@@ -24,14 +24,6 @@ namespace Icod {
 	/// <include file='..\..\..\doc\Icod.xml' path='types/type[@name="Icod.LgplLicenseAttribute"]/member[@name=""]/*'/>
 	[System.AttributeUsageAttribute( System.AttributeTargets.All, AllowMultiple = true )]
 	[System.Serializable]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage( "Microsoft.Design", 
-		"CA1019:DefineAccessorsForAttributeArguments", 
-		Justification = "no such field is necessary" 
-	)]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage( "Microsoft.Design", 
-		"CA1019:DefineAccessorsForAttributeArguments", 
-		Justification = "no such field is necessary" 
-	)]
 	public sealed class LgplLicenseAttribute : Icod.LicenseAttribute { 
 
 		[System.NonSerialized]

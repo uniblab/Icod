@@ -24,14 +24,6 @@ namespace Icod {
 	/// <include file='..\..\..\doc\Icod.xml' path='types/type[@name="Icod.GplLicenseAttribute"]/member[@name=""]/*'/>
 	[System.AttributeUsage( System.AttributeTargets.All, AllowMultiple = true )]
 	[System.Serializable]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage( "Microsoft.Design", 
-		"CA1019:DefineAccessorsForAttributeArguments", 
-		Justification = "no such field is necessary" 
-	)]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage( "Microsoft.Design", 
-		"CA1019:DefineAccessorsForAttributeArguments", 
-		Justification = "no such field is necessary" 
-	)]
 	public sealed class GplLicenseAttribute : Icod.LicenseAttribute { 
 
 		/// <summary>The actual license for this specific type.</summary>

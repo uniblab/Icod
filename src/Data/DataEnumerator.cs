@@ -8,23 +8,20 @@ namespace Icod.Data {
 
 		#region fields
 		private System.Boolean disposed;
-		private System.Data.Common.DbCommand myCommand;
+		private readonly System.Data.IDbCommand myCommand;
 		private System.Data.IDataReader myReader;
-		private System.Data.CommandBehavior myBehaviour;
+		private readonly System.Data.CommandBehavior myBehaviour;
 		#endregion fields
 
 
 		#region .ctor
 		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataEnumerator`1"]/member[@name="#ctor(System.Data.Common.DbCommand)"]/*'/>
-		internal DataEnumerator( System.Data.Common.DbCommand command ) : this( command, System.Data.CommandBehavior.SingleResult ) { 
+		internal DataEnumerator( System.Data.IDbCommand command ) : this( command, System.Data.CommandBehavior.SingleResult ) { 
 		}
 
 		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataEnumerator`1"]/member[@name="#ctor(System.Data.Common.DbCommand,System.Data.CommandBehavior)"]/*'/>
-		internal DataEnumerator( System.Data.Common.DbCommand command, System.Data.CommandBehavior behaviour ) : this() { 
-			if ( null == command ) { 
-				throw new System.InvalidOperationException();
-			}
-			myCommand = command;
+		internal DataEnumerator( System.Data.IDbCommand command, System.Data.CommandBehavior behaviour ) : this() {
+			myCommand =  command ?? throw new System.InvalidOperationException();
 			myBehaviour = behaviour;
 			myReader = command.ExecuteReader( myBehaviour );
 		}
@@ -35,10 +32,6 @@ namespace Icod.Data {
 		}
 
 		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataEnumerator`1"]/member[@name="Finalize"]/*'/>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage( "Microsoft.Design", 
-			"CA1063:ImplementIDisposableCorrectly", 
-			Justification = "the analysis suggests I do *exactly* as I am doing" 
-		)]
 		~DataEnumerator() { 
 			this.Dispose( false );
 		}
@@ -56,7 +49,7 @@ namespace Icod.Data {
 		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataEnumerator`1"]/member[@name="Current"]/*'/>
 		public T Current { 
 			get { 
-				if ( ( null == myReader ) || ( true == myReader.IsClosed ) ) { 
+				if ( ( null == myReader ) || myReader.IsClosed ) { 
 					throw new System.InvalidOperationException( );
 				} else { 
 					T output = new T();
@@ -75,33 +68,25 @@ namespace Icod.Data {
 		}
 
 		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataEnumerator`1"]/member[@name="Reset"]/*'/>
-		public void Reset() { 
-			if ( null != myReader ) { 
-				myReader.Dispose();
-			}
-			if ( null == myCommand ) { 
+		public void Reset() {
+			myReader?.Dispose();
+			if ( null == myCommand ) {
 				throw new System.InvalidOperationException();
 			}
 			myReader = myCommand.ExecuteReader( myBehaviour );
 		}
 
-		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataEnumerator`1"]/member[@name="Dispose"]/*'/>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage( "Microsoft.Design", 
-			"CA1063:ImplementIDisposableCorrectly", 
-			Justification = "the analysis suggests I do *exactly* as I am doing" 
-		)]
+		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose"]/*'/>
 		public void Dispose() { 
 			this.Dispose( true );
 			System.GC.SuppressFinalize( this );
 		}
 
-		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataEnumerator`1"]/member[@name="Dispose(System.Boolean)"]/*'/>
+		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose(System.Boolean)"]/*'/>
 		protected virtual void Dispose( System.Boolean disposing ) { 
 			lock ( this ) { 
-				if ( false == disposed ) { 
-					if ( null != myReader ) { 
-						myReader.Dispose();
-					}
+				if ( false == disposed ) {
+					myReader?.Dispose();
 					if ( true == disposing ) { 
 						myReader = null;
 					}

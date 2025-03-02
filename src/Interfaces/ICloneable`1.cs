@@ -6,6 +6,7 @@ namespace Icod {
 	[Icod.LgplLicense]
 	public interface ICloneable<T> : System.ICloneable {
 
+		///<include file='..\..\doc\Icod.xml' path='types/type[@name="Icod.ICloneable`1"]/member[@name="Clone"]/*'/>
 		new T Clone();
 
 	}

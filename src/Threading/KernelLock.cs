@@ -35,7 +35,7 @@ namespace Icod.Threading {
 					break;
 				}
 				if ( true == Icod.Threading.Interlocked.ExchangeCompare( ref this.State, oldState, oldState + Icod.Threading.KernelLock.Waiter ) ) { 
-					waitKLock.WaitOne();
+					_ = waitKLock.WaitOne();
 				}
 			}
 		}
@@ -44,16 +44,15 @@ namespace Icod.Threading {
 		public sealed override void Exit() { 
 			System.Int32 oldState = Icod.Threading.Interlocked.And( ref this.State, ~Icod.Threading.KernelLock.Owner );
 			if ( oldState != Icod.Threading.KernelLock.Owner ) { 
-				oldState = oldState & ~Icod.Threading.KernelLock.Owner;
+				oldState &= ~Icod.Threading.KernelLock.Owner;
 				if ( true == Icod.Threading.Interlocked.ExchangeCompare( ref this.State, oldState & ~Icod.Threading.KernelLock.Owner, oldState - Icod.Threading.KernelLock.Waiter ) ) { 
-					waitKLock.Release();
+					_ = waitKLock.Release();
 				}
 			}
 			System.Threading.Thread.EndCriticalRegion();
 		}
 
-		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.SynchronousLockBase"]/member[@name="Dispose(System.Boolean)"]/*'/>
-		[System.Runtime.ConstrainedExecution.PrePrepareMethodAttribute()]
+		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose(System.Boolean)"]/*'/>
 		protected sealed override void Dispose( System.Boolean disposing ) { 
 			if ( true == disposing ) { 
 				System.Threading.Thread.BeginCriticalRegion();

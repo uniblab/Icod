@@ -4,10 +4,6 @@ namespace Icod.Data {
 	[Icod.Author( "Timothy J. ``Flytrap\'\' Bruce" )]
 	[Icod.ReportBugsTo( "mailto:uniblab@hotmail.com" )]
 	[Icod.LgplLicense]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage( "Microsoft.Naming", 
-		"CA1710:IdentifiersShouldHaveCorrectSuffix", 
-		Justification = "This *is* the most specific (and correct) suffix" 
-	)]
 	public class DataEnumerable<T> : Icod.Data.DataStore<T>, Icod.Data.IDataEnumerable<T> where T : IDataReadable, new() { 
 
 		#region fields
@@ -39,9 +35,7 @@ namespace Icod.Data {
 		internal System.Data.Common.DbCommand EnumeratorDataSource { 
 			get { 
 				ReadEventArgs<T> arg = new ReadEventArgs<T>();
-				if ( null != this.Enumerating ) { 
-					this.Enumerating( this, arg );
-				}
+				this.Enumerating?.Invoke( this, arg );
 				if ( true == arg.Cancel ) { 
 					arg = null;
 					return null;

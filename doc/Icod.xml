@@ -11,6 +11,66 @@
 -->
 <types>
 
+	<type name="System.IDisposable">
+		<member name="Dispose">
+			<summary>Releases unmanaged locking objects.</summary>
+			<remarks>
+				Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+			</remarks>
+		</member>
+		<member name="Dispose(System.Boolean)">
+			<summary>
+				Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+			</summary>
+			<param name="disposing">
+				If disposing equals true, the method has been called directly or indirectly by a user's code.
+				Managed and unmanaged resources can be disposed.
+				If disposing equals false, the method has been called by the runtime from inside the finalizer
+				and you should not reference other objects.
+				Only unmanaged resources can be disposed.
+			</param>
+			<remarks>
+				Releases all locks.  Behavior at this point is undefined.
+			</remarks>
+		</member>
+
+	</type>
+
+	<type name="Icod.ICloneable`1">
+		<member name="">
+			<summary>
+				Supports cloning, which creates a new instance of a class with the same value as an existing instance.
+			</summary>
+		</member>
+		<member name="Clone">
+			<summary>
+				Creates a new object that is a copy of the current instance.
+			</summary>
+			<returns>
+				A copy of the current instance strongly typed as <typeparamref name="T" />
+			</returns>
+		</member>
+	</type>
+
+	<type name="Icod.IAsyncResult">
+		<member name="">
+			<summary>
+				Represents the status of an asynchronous operation.
+			</summary>
+			<typeparam name="R">
+				The Result of the the asynchronous operation.
+			</typeparam>
+		</member>
+		<member name="Result">
+			<summary>
+				Gets the ultimate result of the asynchronous operation.
+			</summary>
+			<returns>
+				A user-defined object that qualifies or contains the result of the asynchronous operation.
+			</returns>
+		</member>
+	</type>
+
 	<type name="Icod.Exception">
 		<member name="">
 			<summary>The root type for all Icod-based framework exceptions.</summary>
@@ -18,8 +78,8 @@
 			<seealso>Partition I of the CLI Specification</seealso>
 			<threadsafety static="true" instance="false" />
 			<remarks>
-				This class is the base class for all ICOD Exceptions.  
-				When an error occurs the library reports it by throwing an <c>Icod.Exception</c> (or one of her derived types) containing information about the error. 
+				This class is the base class for all ICOD Exceptions.
+				When an error occurs the library reports it by throwing an <c>Icod.Exception</c> (or one of her derived types) containing information about the error.
 			</remarks>
 		</member>
 		<member name="#ctor">
@@ -28,7 +88,7 @@
 			</summary>
 			<remarks>
 				This constructor initializes the <see cref="P:Icod.Exception.Message">Icod.Exception.Message</see> property of the new instance to a system-supplied message that describes the error and takes into account the current system culture.
-				The <see cref="P:Icod.Exception.InnerException">Icod.Exception.InnerException</see> property is initialized to <see langword="null" /> and the 
+				The <see cref="P:Icod.Exception.InnerException">Icod.Exception.InnerException</see> property is initialized to <see langword="null" /> and the
 				<see cref="P:Icod.Exception.StackTrace">Icod.Exception.StackTrace</see> property is initialized to <see cref="F:System.String.Empty">System.String.Empty</see>.
 			</remarks>
 			<seealso cref="M:System.ApplicationException#ctor" />
@@ -49,7 +109,9 @@
 					The <see cref="P:Icod.Exception.InnerException">Icod.Exception.InnerException</see> property is initialized to null and the <see cref="P:Icod.Exception.StackTrace">Icod.Exception.StackTrace</see> property is initialized to <see cref="F:System.String.Empty">System.String.Empty</see>.
 				</param>
 				<param>
-					Identical to invoking <c>new Icod.Exception( <paramref name="message" />, null )</c>.
+					Identical to invoking <c>
+						new Icod.Exception( <paramref name="message" />, null )
+					</c>.
 				</param>
 			</remarks>
 			<seealso cref="M:System.ApplicationException#ctor(System.String)" />
@@ -59,12 +121,12 @@
 				Constructs and initializes a new instance of the <see cref="T:Icod.Exception">Icod.Exception</see> class.
 			</summary>
 			<param name='message'>
-				A <see cref="T:System.String">System.String</see> that describes the error.  
-				The content of message is intended to be understood by humans.  
-				The caller of this constructor is required to ensure that this string has been localized for the current system culture.  
+				A <see cref="T:System.String">System.String</see> that describes the error.
+				The content of message is intended to be understood by humans.
+				The caller of this constructor is required to ensure that this string has been localized for the current system culture.
 			</param>
 			<param name="innerException">
-				The underlying <see cref="T:System.Exception">exception</see> which triggered this exception's generation.  
+				The underlying <see cref="T:System.Exception">exception</see> which triggered this exception's generation.
 			</param>
 			<seealso cref="M:System.ApplicationException#ctor(System.String,System.Exception)" />
 		</member>
@@ -103,7 +165,9 @@
 			<summary>The root type for all Icod-base framework attributes.</summary>
 		</member>
 		<member name="#ctor">
-			<summary>Creates a new instance of an <see cref="T:Icod.Attribute">Icod.Attribute</see>.</summary>
+			<summary>
+				Creates a new instance of an <see cref="T:Icod.Attribute">Icod.Attribute</see>.
+			</summary>
 		</member>
 		<member name="#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
 			<summary>
@@ -132,6 +196,137 @@
 			<remarks>
 				Any objects that are included in the <see cref="T:System.Runtime.Serialization.SerializationInfo">SerializationInfo</see> are automatically tracked and serialized by the formatter.
 			</remarks>
+		</member>
+	</type>
+
+	<type name="Icod.Pair`2">
+		<member name="">
+			<summary>
+				An immutable reference type to conveniently hold two values of c and <typeparamref name="TSecond" />.
+			</summary>
+		</member>
+		<member name="#sctor">
+			<summary>Initializes static values.</summary>
+		</member>
+		<member name="#ctor">
+			<summary>Sets the instance's initial values.</summary>
+		</member>
+		<member name="#ctor(`0,`1)">
+			<summary>Sets the instance's values.</summary>
+			<param name="first">
+				A value of type <typeparamref name="TFirst" /> to associate with the first value.
+			</param>
+			<param name="second">
+				A value of type <typeparamref name="TSecond" /> to associate with the second value.
+			</param>
+		</member>
+		<member name="First">
+			<summary>The first value.</summary>
+			<returns>The first value.</returns>
+		</member>
+		<member name="Second">
+			<summary>The second value.</summary>
+			<returns>The second value.</returns>
+		</member>
+		<member name="GetHashCode">
+			<summary>Returns the hash code of the current instance.</summary>
+			<returns>A hash code for the current instance.</returns>
+			<seealso cref="M:System.Object.GetHashCode" />
+			<seealso cref="T:System.Int32" />
+		</member>
+	</type>
+	<type name="Icod.Pair`1">
+		<member name="">
+			<summary>
+				An immutable reference type to conveniently hold two values of <typeparamref name="T" />.
+			</summary>
+		</member>
+		<member name="#ctor(`0,`1)">
+			<summary>Sets the instance's values.</summary>
+			<param name="first">
+				A value of type <typeparamref name="T" /> to associate with the first value.
+			</param>
+			<param name="second">
+				A value of type <typeparamref name="T" /> to associate with the second value.
+			</param>
+		</member>
+	</type>
+	<type name="Icod.Pair">
+		<member name="">
+			<summary>
+				An immutable reference type to conveniently hold two values.
+			</summary>
+		</member>
+		<member name="#ctor(System.Object,System.Object)">
+			<summary>Sets the instance's values.</summary>
+			<param name="first">
+				A value to associate with the first value.
+			</param>
+			<param name="second">
+				A value associate with the second value.
+			</param>
+		</member>
+	</type>
+
+	<type name="Icod.Triplet`3">
+		<member name="">
+			<summary>
+				An immutable reference type to conveniently hold three values of <typeparamref name="TFirst" />, <typeparamref name="TSecond" />, and <typeparamref name="TThird" />.
+			</summary>
+		</member>
+		<member name="#ctor(`0,`1,`2)">
+			<summary>Sets the instance's values.</summary>
+			<param name="first">
+				A value of type <typeparamref name="TFirst" /> to associate with the first value.
+			</param>
+			<param name="second">
+				A value of type <typeparamref name="TSecond" /> to associate with the second value.
+			</param>
+			<param name="third">
+				A value of type <typeparamref name="TThird" /> to associate with the third value.
+			</param>
+		</member>
+		<member name="Third">
+			<summary>The third value.</summary>
+			<returns>The third value.</returns>
+		</member>
+	</type>
+	<type name="Icod.Triplet`1">
+		<member name="">
+			<summary>
+				An immutable reference type to conveniently hold three values of <typeparamref name="T" />.
+			</summary>
+		</member>
+		<member name="#ctor(`0,`1,`2)">
+			<summary>Sets the instance's values.</summary>
+			<param name="first">
+				A value of type <typeparamref name="T" /> to associate with the first value.
+			</param>
+			<param name="second">
+				A value of type <typeparamref name="T" /> to associate with the second value.
+			</param>
+			<param name="third">
+				A value of type <typeparamref name="T" /> to associate with the third value.
+			</param>
+		</member>
+	</type>
+	<type name="Icod.Triplet">
+		<member name="">
+			<summary>
+				An immutable reference type to conveniently hold three values.
+			</summary>
+		</member>
+		<member name="#ctor(System.Object,System.Object,System.Object)">
+			<summary>Sets the instance's values.</summary>
+			<param name="first">
+				A value to associate with the first value.
+			</param>
+			<param name="second">
+				A value associate with the second value.
+			</param>
+			<param name="third">
+				A value associate with the third value.
+			</param>
 		</member>
 	</type>
 
@@ -201,7 +396,11 @@
 			<param name="uri">
 				A URI.
 			</param>
-			<remarks>Identical to invoking <see cref="M:Icod.ReportBugsToAttribute.#ctor(System.Uri)">new Icod.ReportBugsToAttribute( new System.Uri( <paramref name="uri" /> )</see></remarks>
+			<remarks>
+				Identical to invoking <see cref="M:Icod.ReportBugsToAttribute.#ctor(System.Uri)">
+					new Icod.ReportBugsToAttribute( new System.Uri( <paramref name="uri" /> )
+				</see>
+			</remarks>
 			<seealso cref="M:Icod.ReportBugsToAttribute.#ctor(System.Uri)" />
 			<exception cref="T:System.UriFormatException">
 				<list type="bullet">
@@ -421,38 +620,38 @@
 		<member name="">
 			<summary>Indicates the assembly, type, or member to which this attribute is attached is governed by said license</summary>
 			<remarks>
-				Licenses, unless explicitly proscribed, are transitive.  
-				A license applied to a type transitively applies to all her members unless specifically overridden with a new license.  
-				Many authors may find it easiest to deal with different licensure requires via the C# ``partial'' keyword, 
-				allowing them to create one source file for all the aspects which are governed by one license, 
-				and another file for another license, and so on.  
+				Licenses, unless explicitly proscribed, are transitive.
+				A license applied to a type transitively applies to all her members unless specifically overridden with a new license.
+				Many authors may find it easiest to deal with different licensure requires via the C# ``partial'' keyword,
+				allowing them to create one source file for all the aspects which are governed by one license,
+				and another file for another license, and so on.
 			</remarks>
 			<example>
 				Specifying multiple licenses:
 				<code>
-[Icod.LgplLicense]
-public class Foo { 
+					[Icod.LgplLicense]
+					public class Foo {
 
-	public Foo() { 
-		// covered by the LGPL
-	}
+					public Foo() {
+					// covered by the LGPL
+					}
 
-	[Icod.GplLicense]
-	public void SomeComplexMethodAlreadyAvailableViaGpl() { 
-		// that function/routine here, covered by the GPL
-	}
+					[Icod.GplLicense]
+					public void SomeComplexMethodAlreadyAvailableViaGpl() {
+					// that function/routine here, covered by the GPL
+					}
 
-	public System.Int32 SomeOtherFunction( Systm.Boolean input ) { 
-		// this is covered by the LGPL
-	}
+					public System.Int32 SomeOtherFunction( Systm.Boolean input ) {
+					// this is covered by the LGPL
+					}
 
-	protected class Bar { 
-		// this nested class is also covered by the LGPL
-		//  unless she, or her members, 
-		//  specifically override the license.
-	}
+					protected class Bar {
+					// this nested class is also covered by the LGPL
+					//  unless she, or her members,
+					//  specifically override the license.
+					}
 
-}
+					}
 				</code>
 			</example>
 			<seealso cref="T:Icod.Attribute" />
@@ -683,6 +882,30 @@ public class Foo {
 	<type name="Icod.IEnumerableByPredicate`1">
 	</type>
 	<type name="Icod.EnumeratorByPredicate`1">
+	</type>
+
+	<type name="Icod.ChainedDisposer">
+		<member name="">
+			<summary>
+				Concatenates a pair of disposable objects into a single disposable object.
+			</summary>
+		</member>
+		<member name="#ctor(System.IDisposable,System.IDisposable)">
+			<summary>
+				Creates a new reference to a concatenated pair of disposable objects.
+			</summary>
+			<param name="outer">
+				The first object to be disposed.
+			</param>
+			<param name="inner">
+				The second object to be disposed.
+			</param>
+		</member>
+		<member name="#dtor">
+			<summary>
+				Allows the object to try to free resources and perform other cleanup operations before it is reclaimed by garbage collection.
+			</summary>
+		</member>
 	</type>
 
 </types>
