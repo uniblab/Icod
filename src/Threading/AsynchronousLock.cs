@@ -82,7 +82,7 @@ namespace Icod.Threading {
 		}
 		/// <include file='..\..\doc\Icod.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose(System.Boolean)"]/*'/>
 		public void Dispose( System.Boolean disposing ) { 
-			if ( true == disposing ) { 
+			if ( disposing ) { 
 				System.Threading.Thread.BeginCriticalRegion();
 				if ( !myIsDisposed ) {
 					myLock?.Dispose();

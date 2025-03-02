@@ -36,7 +36,7 @@ namespace Icod.Data {
 			get { 
 				ReadEventArgs<T> arg = new ReadEventArgs<T>();
 				this.Enumerating?.Invoke( this, arg );
-				if ( true == arg.Cancel ) { 
+				if ( arg.Cancel ) { 
 					arg = null;
 					return null;
 				}

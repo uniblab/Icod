@@ -87,7 +87,7 @@ namespace Icod.Data {
 			lock ( this ) { 
 				if ( false == disposed ) {
 					myReader?.Dispose();
-					if ( true == disposing ) { 
+					if ( disposing ) { 
 						myReader = null;
 					}
 					disposed = true;

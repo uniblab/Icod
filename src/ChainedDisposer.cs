@@ -45,7 +45,7 @@ namespace Icod {
 		}
 		/// <include file='..\doc\Icod.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose(System.Boolean)"]/*'/>
 		private void Dispose( System.Boolean disposing ) {
-			if ( true == disposing ) {
+			if ( disposing ) {
 				System.Threading.Thread.BeginCriticalRegion();
 				if ( !myIsDisposed ) {
 					var second = this.Second;
