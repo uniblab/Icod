@@ -4,10 +4,6 @@ namespace Icod {
 	[System.AttributeUsage( System.AttributeTargets.All, AllowMultiple = true )]
 	[System.Serializable]
 	[Icod.LgplLicense]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage( "Microsoft.Design", 
-		"CA1019:DefineAccessorsForAttributeArguments", 
-		Justification = "no such field is necessary" 
-	)]
 	public sealed class AuthorAttribute : Icod.Attribute { 
 
 		private readonly System.String myName;
@@ -23,14 +19,8 @@ namespace Icod {
 		}
 
 		/// <include file='..\..\doc\Icod.xml' path='types/type[@name="Icod.AuthorAttribute"]/member[@name="GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)"]/*'/>
-		[System.Security.Permissions.SecurityPermissionAttribute( 
-			System.Security.Permissions.SecurityAction.LinkDemand, 
-			Flags=System.Security.Permissions.SecurityPermissionFlag.SerializationFormatter 
-		)]
-		public override void GetObjectData( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) { 
-			if ( null != info ) { 
-				info.AddValue( "myName", myName, typeof( System.String ) );
-			}
+		public override void GetObjectData( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) {
+			info?.AddValue( "myName", myName, typeof( System.String ) );
 		}
 
 		/// <include file='..\..\doc\Icod.xml' path='types/type[@name="Icod.AuthorAttribute"]/member[@name="Name"]/*'/>

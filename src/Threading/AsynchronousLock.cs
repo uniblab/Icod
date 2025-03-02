@@ -17,12 +17,9 @@ namespace Icod.Threading {
 		}
 		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.AsynchronousLock`1"]/member[@name="#ctor(L)"]/*'/>
 		public AsynchronousLock( L theLock ) : base() { 
-			if ( null == theLock ) { 
-				throw new System.ArgumentNullException( "theLock" );
-			}
-			myLock = theLock;
+			myLock = theLock ?? throw new System.ArgumentNullException( nameof( theLock ) );
 		}
-		[System.Runtime.ConstrainedExecution.PrePrepareMethod]
+		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.AsynchronousLock`1"]/member[@name="#dtor"]/*'/>
 		~AsynchronousLock() { 
 			this.Dispose( false );
 		}
@@ -54,7 +51,7 @@ namespace Icod.Threading {
 		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.IAsynchronousLock"]/member[@name="BeginAcquire"]/*'/>
 		public System.IAsyncResult BeginAcquire( System.AsyncCallback callback, System.Object state ) { 
 			Icod.Threading.LockResult output = new Icod.Threading.LockResult( callback, state );
-			System.Threading.ThreadPool.QueueUserWorkItem( this.AcquireHelper, output );
+			_ = System.Threading.ThreadPool.QueueUserWorkItem( this.AcquireHelper, output );
 			if ( output.IsCompleted ) { 
 				output.SetSynchronousCopmpletion( true );
 			}
@@ -67,11 +64,6 @@ namespace Icod.Threading {
 			return input.End();
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage( 
-			"Microsoft.Design", 
-			"CA1031:DoNotCatchGeneralExceptionTypes", 
-			Justification = "The exception *will* be rethrown when End* is invoked." 
-		)]
 		private void AcquireHelper( System.Object asyncResult ) { 
 			Icod.Threading.LockResult input = (Icod.Threading.LockResult)asyncResult;
 			try { 
@@ -82,12 +74,10 @@ namespace Icod.Threading {
 			}
 		}
 
-		[System.Runtime.ConstrainedExecution.PrePrepareMethod]
 		public void Dispose() { 
 			this.Dispose( true );
 			System.GC.SuppressFinalize( this );
 		}
-		[System.Runtime.ConstrainedExecution.PrePrepareMethod]
 		public void Dispose( System.Boolean disposing ) { 
 			if ( true == disposing ) { 
 				System.Threading.Thread.BeginCriticalRegion();

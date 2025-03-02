@@ -234,6 +234,11 @@ namespace Example {
 				Thrown if <paramref name="theLock"/> is <c>null</c>.
 			</exception>
 		</member>
+		<member name="#dtor">
+			<summary>Allows the lock to try to free resources before it is reclaimed by garbage collection.</summary>
+			<seealso cref="T:Icod.Threading.Lock`1" />
+			<seealso cref="M:System.Object.Finalize" />
+		</member>
 		<member name="Acquire">
 			<summary>Returns a synchronized (lock) context cookie.</summary>
 			<returns>
@@ -284,9 +289,6 @@ using ( myLockObject.Acquire() ) {
 		</member>
 		<member name="EndInvoke">
 			<summary>Waits for the pending asynchronous read to complete.</summary>
-			<returns>
-				The results, <typeparamref name="R" />, of the operation.
-			</returns>
 		</member>
 	</type>
 
@@ -341,7 +343,7 @@ using ( myLockObject.Acquire() ) {
 			<remarks>
 				<typeparamref name="L">L</typeparamref> must be derived from <see cref="T:Icod.Threading.SynchronousLockBase">Icod.Threading.SynchronousLockBase</see>.
 			</remarks>
-			<seealso cref="T:Icod.Threading.Lock" />
+			<seealso cref="T:Icod.Threading.Lock`1" />
 		</member>
 		<member name="#ctor">
 			<summary>
@@ -361,6 +363,10 @@ using ( myLockObject.Acquire() ) {
 			<exception cref="T:System.NullArgumentException">
 				Thrown if <paramref name="theLock"/> is <c>null</c>.
 			</exception>
+		</member>
+		<member name="#dtor">
+			<summary>Allows the lock to try to free resources before it is reclaimed by garbage collection.</summary>
+			<seealso cref="T:Icod.Threading.Lock`1" />
 		</member>
 	</type>
 

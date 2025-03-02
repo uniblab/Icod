@@ -24,10 +24,6 @@ namespace Icod {
 	/// <include file='..\..\doc\Icod.xml' path='types/type[@name="Icod.ReportBugsToAttribute"]/member[@name=""]/*'/>
 	[System.AttributeUsageAttribute( System.AttributeTargets.All, AllowMultiple = true )]
 	[System.SerializableAttribute]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage( "Microsoft.Design", 
-		"CA1019:DefineAccessorsForAttributeArguments", 
-		Justification = "There is already a readonly field and a readonly property accessor" 
-	)]
 	[Icod.LgplLicense]
 	public sealed class ReportBugsToAttribute : Icod.Attribute { 
 
@@ -48,14 +44,8 @@ namespace Icod {
 		}
 
 		/// <include file='..\..\doc\Icod.xml' path='types/type[@name="Icod.AuthorAttribute"]/member[@name="GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)"]/*'/>
-		[System.Security.Permissions.SecurityPermissionAttribute( 
-			System.Security.Permissions.SecurityAction.LinkDemand, 
-			Flags=System.Security.Permissions.SecurityPermissionFlag.SerializationFormatter 
-		)]
-		public override void GetObjectData( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) { 
-			if ( null != info ) { 
-				info.AddValue( "myUri", myUri, typeof( System.Uri ) );
-			}
+		public override void GetObjectData( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) {
+			info?.AddValue( "myUri", myUri, typeof( System.Uri ) );
 		}
 
 		/// <include file='..\..\doc\Icod.xml' path='types/type[@name="Icod.ReportBugsToAttribute"]/member[@name="Uri"]/*'/>

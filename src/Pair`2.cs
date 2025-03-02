@@ -58,7 +58,7 @@ namespace Icod {
 
 
 		#region methods
-		public sealed override System.Int32 GetHashCode() {
+		public override System.Int32 GetHashCode() {
 			return myHashCode;
 		}
 		#endregion methods

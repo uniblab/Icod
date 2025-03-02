@@ -23,10 +23,6 @@ namespace Icod {
 
 	/// <include file='..\doc\Icod.xml' path='types/type[@name="Icod.Attribute"]/member[@name=""]/*'/>
 	[System.Serializable]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage( "Microsoft.Design", 
-		"CA1019:DefineAccessorsForAttributeArguments", 
-		Justification = "no such field is necessary" 
-	)]
 	public abstract class Attribute : System.Attribute, System.Runtime.Serialization.ISerializable { 
 
 		/// <include file='..\doc\Icod.xml' path='types/type[@name="Icod.Attribute"]/member[@name="#ctor"]/*'/>
@@ -34,22 +30,10 @@ namespace Icod {
 		}
 
 		/// <include file='..\doc\Icod.xml' path='types/type[@name="Icod.Attribute"]/member[@name="#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)"]/*'/>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage( "Microsoft.Performance", 
-			"CA1801:AvoidUnusedParameters", 
-			Justification = "this exists to support the serialization chain" 
-		)]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage( "Microsoft.Performance", 
-			"CA1801:AvoidUnusedParameters", 
-			Justification = "this exists to support the serialization chain" 
-		)]
 		protected Attribute( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext sc ) : this()  { 
 		}
 
 		/// <include file='..\doc\Icod.xml' path='types/type[@name="Icod.Attribute"]/member[@name="GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)"]/*'/>
-		[System.Security.Permissions.SecurityPermissionAttribute( 
-			System.Security.Permissions.SecurityAction.LinkDemand, 
-			Flags=System.Security.Permissions.SecurityPermissionFlag.SerializationFormatter 
-		)]
 		public abstract void GetObjectData( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context );
 
 	}

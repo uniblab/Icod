@@ -1,3 +1,5 @@
+using Icod.Threading;
+
 namespace Icod { 
 
 	/// <include file='..\doc\Icod.xml' path='types/type[@name="Icod.AsyncResult"]/member[@name=""]/*'/>
@@ -7,6 +9,9 @@ namespace Icod {
 	public abstract class AsyncResult : System.IAsyncResult { 
 
 		#region fields
+		private static readonly VolatileRead theReader;
+		private static readonly VolatileWrite theWriter;
+
 		private readonly System.AsyncCallback myCallback;
 		private readonly System.Object myAsyncState;
 		private System.Threading.ManualResetEvent myWaitHandle;
@@ -21,12 +26,25 @@ namespace Icod {
 
 
 		#region .ctor
+		static AsyncResult() {
+#if NET8_0_OR_GREATER
+			theReader = System.Threading.Volatile.Read;
+			theWriter = System.Threading.Volatile.Write;
+#elif NET45_OR_GREATER || NETCOREAPP || NETSTANDARD || NET5_0_OR_GREATER
+			theReader = System.Threading.Volatile.Read;
+			theWriter = System.Threading.Volatile.Write;
+#else
+			theReader = System.Threading.Thread.VolatileRead;
+			theWriter = System.Threading.Thread.VolatileWrite;
+#endif
+		}
+
 		/// <include file='..\doc\Icod.xml' path='types/type[@name="Icod.AsyncResult"]/member[@name="#ctor(System.AsyncCallback,System.Object)"]/*'/>
 		protected AsyncResult( System.AsyncCallback callback, System.Object asyncState ) { 
 			myCallback = callback;
 			myAsyncState = asyncState;
 		}
-		#endregion .ctor
+#endregion .ctor
 
 
 		#region properties
@@ -45,10 +63,9 @@ namespace Icod {
 					System.Threading.ManualResetEvent probe = new System.Threading.ManualResetEvent( isDone );
 					if ( false == Icod.Threading.Interlocked.ExchangeCompare<System.Threading.ManualResetEvent>( ref myWaitHandle, null, probe ) ) { 
 						probe.Close();
-						probe = null;
 					} else { 
 						if ( !isDone && this.IsCompleted ) { 
-							myWaitHandle.Set();
+							_ = myWaitHandle.Set();
 						}
 					}
 				}
@@ -59,14 +76,14 @@ namespace Icod {
 		/// <include file='..\doc\Icod.xml' path='types/type[@name="Icod.AsyncResult"]/member[@name="CompletedSynchronously"]/*'/>
 		public System.Boolean CompletedSynchronously { 
 			get { 
-				return ( SynchronousloyCompleted == System.Threading.Thread.VolatileRead( ref myStatus ) );
+				return ( SynchronousloyCompleted == theReader( ref myStatus ) );
 			}
 		}
 
 		/// <include file='..\doc\Icod.xml' path='types/type[@name="Icod.AsyncResult"]/member[@name="IsCompleted"]/*'/>
 		public System.Boolean IsCompleted { 
 			get { 
-				return ( PendingCompletion != System.Threading.Thread.VolatileRead( ref myStatus ) );
+				return ( PendingCompletion != theReader( ref myStatus ) );
 			}
 		}
 		#endregion properties
@@ -78,7 +95,7 @@ namespace Icod {
 			if ( false == this.IsCompleted ) { 
 				throw new System.InvalidOperationException();
 			}
-			System.Threading.Thread.VolatileWrite( ref myStatus, value ? SynchronousloyCompleted : AsynchronoyslyCompleted );
+			theWriter( ref myStatus, value ? SynchronousloyCompleted : AsynchronoyslyCompleted );
 		}
 
 		/// <include file='..\doc\Icod.xml' path='types/type[@name="Icod.AsyncResult"]/member[@name="SetCompletion(System.Boolean,System.Exception)"]/*'/>
@@ -87,18 +104,14 @@ namespace Icod {
 				throw new System.InvalidOperationException();
 			}
 			myCompletionException = completionException;
-			if ( null != myWaitHandle ) { 
-				myWaitHandle.Set();
-			}
-			if ( null != myCallback ) { 
-				myCallback( this );
-			}
+			_ = myWaitHandle?.Set();
+			myCallback?.Invoke( this );
 		}
 
 		/// <include file='..\doc\Icod.xml' path='types/type[@name="Icod.AsyncResult"]/member[@name="EndInvoke"]/*'/>
 		protected void EndInvoke() { 
 			if ( false == this.IsCompleted ) { 
-				this.AsyncWaitHandle.WaitOne();
+				_ = this.AsyncWaitHandle.WaitOne();
 			}
 			if ( null != myWaitHandle ) { 
 				myWaitHandle.Close();

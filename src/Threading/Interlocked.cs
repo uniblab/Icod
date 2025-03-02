@@ -165,11 +165,6 @@ namespace Icod.Threading {
 		}
 
 		///<include file='../../doc/Icod.Threading.xml' path='types/type[@name="Icod.Threading.Interlocked"]/member[@name="ExchangeCompare`3(`0@,`1,`2)"]/*'/>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage( 
-			"Microsoft.Design", 
-			"CA1045:DoNotPassTypesByReference", 
-			Justification = "Passing by-reference is *required* if one wishes to perform an interlocked operation." 
-		)]
 		public static System.Boolean ExchangeCompare<O>( ref O target, O condition, O value ) where O : class { 
 			return System.Object.ReferenceEquals( condition, System.Threading.Interlocked.CompareExchange( ref target, value, condition ) );
 		}

@@ -3,14 +3,12 @@ namespace Icod {
 	[Icod.LgplLicense]
 	[Icod.Author( "Timothy J. ``Flytrap'' Bruce" )]
 	[Icod.ReportBugsTo( "mailto:uniblab@hotmail.com" )]
-	public class Triplet<TFirst, TSecond, TThird> {
+	public class Triplet<TFirst, TSecond, TThird> : Icod.Pair<TFirst, TSecond> {
 
 		#region fields
 		private static readonly System.Int32 theHashCode;
 
 		private readonly System.Int32 myHashCode;
-		private readonly TFirst myFirst;
-		private readonly TSecond mySecond;
 		private readonly TThird myThird;
 		#endregion fields
 
@@ -26,14 +24,10 @@ namespace Icod {
 			}
 		}
 
-		protected Triplet() : base() {
-			myHashCode = theHashCode;
-		}
-		public Triplet( TFirst first, TSecond second, TThird third ) : this() {
-			myFirst = first;
-			mySecond = second;
+		public Triplet( TFirst first, TSecond second, TThird third ) : base( first, second ) {
 			myThird = third;
 			unchecked {
+				myHashCode = base.GetHashCode() + theHashCode;
 				if ( null != first ) {
 					myHashCode += first.GetHashCode();
 				}
@@ -49,16 +43,6 @@ namespace Icod {
 
 
 		#region properties
-		public virtual TFirst First {
-			get {
-				return myFirst;
-			}
-		}
-		public virtual TSecond Second {
-			get {
-				return mySecond;
-			}
-		}
 		public virtual TThird Third {
 			get {
 				return myThird;

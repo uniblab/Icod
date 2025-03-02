@@ -24,10 +24,6 @@ namespace Icod {
 	/// <include file='..\..\doc\Icod.xml' path='types/type[@name="Icod.LicenseAttribute"]/member[@name=""]/*'/>
 	[System.AttributeUsage( System.AttributeTargets.All, AllowMultiple = false )]
 	[System.Serializable]
-	[System.Diagnostics.CodeAnalysis.SuppressMessage( "Microsoft.Design", 
-		"CA1019:DefineAccessorsForAttributeArguments", 
-		Justification = "There is already a readonly field and a readonly property accessor" 
-	)]
 	public abstract class LicenseAttribute : Icod.Attribute { 
 
 		private readonly System.String myLicense;
@@ -44,15 +40,9 @@ namespace Icod {
 			}
 		}
 
-		/// <include file='..\..\doc\Icod.xml' path='types/type[@name="Icod.AuthorAttribute"]/member[@name="GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)"]/*'/>
-		[System.Security.Permissions.SecurityPermissionAttribute( 
-			System.Security.Permissions.SecurityAction.LinkDemand, 
-			Flags=System.Security.Permissions.SecurityPermissionFlag.SerializationFormatter 
-		)]
-		public override void GetObjectData( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) { 
-			if ( null != info ) { 
-				info.AddValue( "myLicense", myLicense, typeof( System.String ) );
-			}
+		/// <include file='..\..\doc\Icod.xml' path='types/type[@name="Icod.AuthorAttribute"]/member[@name="GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)"]/*'/>		public override void GetObjectData( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) {
+		public override void GetObjectData( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) {
+			info?.AddValue( "myLicense", myLicense, typeof( System.String ) );
 		}
 
 		/// <include file='..\..\doc\Icod.xml' path='types/type[@name="Icod.LicenseAttribute"]/member[@name="License"]/*'/>

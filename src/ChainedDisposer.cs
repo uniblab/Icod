@@ -12,12 +12,16 @@ namespace Icod {
 
 		#region .ctor
 		public ChainedDisposer( System.IDisposable outer, System.IDisposable inner ) : base() {
+#if NET6_0_OR_GREATER
+			System.ArgumentNullException.ThrowIfNull( outer, nameof( outer ) );
+#else
 			if ( null == outer ) {
-				throw new System.ArgumentNullException( "outer" );
+				throw new System.ArgumentNullException( nameof( outer ) );
 			}
 			if ( null == inner ) {
-				throw new System.ArgumentNullException( "inner" );
+				throw new System.ArgumentNullException( nameof( inner ) );
 			}
+#endif
 			myPair = new Pair<System.IDisposable>( inner, outer );
 		}
 
@@ -36,13 +40,9 @@ namespace Icod {
 			if ( true == disposing ) {
 				System.Threading.Thread.BeginCriticalRegion();
 				var second = myPair.Second;
-				if ( null != second ) {
-					second.Dispose();
-				}
+				second?.Dispose();
 				var first = myPair.First;
-				if ( null != first ) {
-					first.Dispose();
-				}
+				first?.Dispose();
 				System.Threading.Thread.EndCriticalRegion();
 			}
 		}
