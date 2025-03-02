@@ -19,13 +19,9 @@ namespace Icod {
 
 
 		#region properties
-		R Icod.IAsyncResult<R>.Result { 
-			get { 
-				return this.Result;
-			}
-		}
+		/// <include file='..\doc\Icod.xml' path='types/type[@name="Icod.IAsyncResult`1"]/member[@name="Result"]/*'/>
 		public R Result { 
-			get { 
+		get { 
 				return myResult;
 			}
 		}

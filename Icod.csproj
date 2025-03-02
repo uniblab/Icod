@@ -83,11 +83,6 @@
 		<WarningLevel>3</WarningLevel>
 		<Optimize>false</Optimize>
 		<DefineConstants>TRACE</DefineConstants>
-		<!--
-		<NoWarn>0628</NoWarn>
-		<NoWarn>1591</NoWarn>
-		<NoWarn>1735</NoWarn>
-		-->
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
 		<Optimize>true</Optimize>
@@ -97,11 +92,6 @@
 		<AssemblyOriginatorKeyFile>..\STRONG_NAME_KEY\Icod.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<DelaySign>false</DelaySign>
-		<!--
-		<NoWarn>0628</NoWarn>
-		<NoWarn>1591</NoWarn>
-		<NoWarn>1735</NoWarn>
-		-->
 	</PropertyGroup>
 	<ItemGroup>
 		<Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
