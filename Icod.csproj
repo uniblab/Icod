@@ -29,15 +29,29 @@
 		<RepositoryType>git</RepositoryType>
 		<PackageProjectUrl>https://github.com/uniblab/Icod</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/uniblab/Icod</RepositoryUrl>
-		<PackageTags></PackageTags>
+		<PackageTags>library, util</PackageTags>
 		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+		<OutputType>Library</OutputType>
+		<StartupObject />
+
+		<TargetFrameworks>net20;net30;net35;net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;net481;netstandard2.0;netstandard2.1;netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
 		<FileVersion>2.0.0.0</FileVersion>
 		<AssemblyVersion>2.0.0.0</AssemblyVersion>
 		<PackageVersion>2.0.0</PackageVersion>
-		<PackageReleaseNotes>Major revision and uplift, supporting many different platforms.</PackageReleaseNotes>
+		<PackageReleaseNotes>Major revision and uplift, supporting many different platforms, improved xmldoc.</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<PropertyGroup>
+		<TargetFrameworkProfile></TargetFrameworkProfile>
+		<FileAlignment>512</FileAlignment>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+		<Configuration Condition=" '$(Platform)' == '' ">AnyCPU</Configuration>
+		<Configurations>Debug;Staging;Release</Configurations>
+		<SignAssembly>false</SignAssembly>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<OutputPath>bin\$(Configuration)\</OutputPath>
+		<DocumentationFile>$(OutDir)\$(Configuration)\$(TargetFrameworkVersion)\$(AssemblyName).XML</DocumentationFile>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>disable</Nullable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -49,22 +63,6 @@
 		<IncludeContentInPack>true</IncludeContentInPack>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<TargetFrameworks>net20;net30;net35;net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;net481;netstandard2.0;netstandard2.1;netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
-		<OutputType>Library</OutputType>
-		<OutputPath>bin\$(Configuration)\</OutputPath>
-		<DocumentationFile>$(OutDir)\$(Configuration)\$(TargetFrameworkVersion)\$(AssemblyName).XML</DocumentationFile>
-		<StartupObject />
-		<TargetFrameworkProfile></TargetFrameworkProfile>
-		<FileAlignment>512</FileAlignment>
-		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-		<Configuration Condition=" '$(Platform)' == '' ">AnyCPU</Configuration>
-		<Configurations>Debug;Release;Staging</Configurations>
-		<SignAssembly>false</SignAssembly>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

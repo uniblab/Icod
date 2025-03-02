@@ -59,7 +59,7 @@ namespace Icod.Data {
 			get {
 				ReadEventArgs<T> arg = new ReadEventArgs<T>();
 				this.Counting?.Invoke( this, arg );
-				if ( true == arg.Cancel ) {
+				if ( arg.Cancel ) {
 					return System.Int32.MinValue;
 				}
 				arg.Command.Connection = this.DataConnection;
@@ -84,7 +84,7 @@ namespace Icod.Data {
 		public void Add( T item ) {
 			WriteEventArgs<T> arg = new WriteEventArgs<T>( item );
 			this.Adding?.Invoke( this, arg );
-			if ( true == arg.Cancel ) {
+			if ( arg.Cancel ) {
 				return;
 			}
 			arg.Command.Connection = this.DataConnection;
@@ -97,7 +97,7 @@ namespace Icod.Data {
 		public void Clear() {
 			WriteEventArgs<T> arg = new WriteEventArgs<T>();
 			this.Clearing?.Invoke( this, arg );
-			if ( true == arg.Cancel ) {
+			if ( arg.Cancel ) {
 				arg = null;
 				return;
 			}
@@ -111,7 +111,7 @@ namespace Icod.Data {
 		public System.Boolean Contains( T item ) {
 			ReadEventArgs<T> arg = new ReadEventArgs<T>( item );
 			this.Containing?.Invoke( this, arg );
-			if ( true == arg.Cancel ) {
+			if ( arg.Cancel ) {
 				return false;
 			}
 			arg.Command.Connection = this.DataConnection;
@@ -134,7 +134,11 @@ namespace Icod.Data {
 			System.Collections.Generic.ICollection<T> buffer;
 #endif
 			using ( IDataEnumerable<T> items = (IDataEnumerable<T>)this ) {
+#if NET8_0_OR_GREATER
+				buffer = [ .. items ];
+#else
 				buffer = new System.Collections.Generic.List<T>( items );
+#endif
 			}
 			buffer.CopyTo( array, arrayIndex );
 			buffer.Clear();
@@ -144,7 +148,7 @@ namespace Icod.Data {
 		public System.Boolean Remove( T item ) {
 			WriteEventArgs<T> arg = new WriteEventArgs<T>( item );
 			this.Removing?.Invoke( this, arg );
-			if ( true == arg.Cancel ) {
+			if ( arg.Cancel ) {
 				return false;
 			}
 			arg.Command.Connection = this.DataConnection;
@@ -153,7 +157,7 @@ namespace Icod.Data {
 			arg.Command.Dispose();
 			return output;
 		}
-		#endregion methods
+#endregion methods
 
 
 		#region operators

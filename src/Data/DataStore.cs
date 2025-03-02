@@ -7,9 +7,9 @@ namespace Icod.Data {
 	public class DataStore<T> : IDataStore<T> { 
 
 		#region fields
-		private System.Boolean IsDisposed;
-		private System.Data.CommandBehavior myBehaviour;
-		private System.Data.Common.DbConnection myConnection;
+		private System.Boolean myIsDisposed;
+		private readonly System.Data.CommandBehavior myBehaviour;
+		private readonly System.Data.Common.DbConnection myConnection;
 		#endregion fields
 
 
@@ -19,14 +19,14 @@ namespace Icod.Data {
 		}
 
 		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataStore`1"]/member[@name="#ctor(System.Data.Common.DbConnection,System.Data.CommandBehavior)"]/*'/>
-		public DataStore( System.Data.Common.DbConnection connection, System.Data.CommandBehavior commandBehaviour ) : this() { 
-			this.DataConnection = connection;
-			this.Behaviour = commandBehaviour;
+		public DataStore( System.Data.Common.DbConnection connection, System.Data.CommandBehavior commandBehaviour ) : this() {
+			myConnection = connection;
+			myBehaviour = commandBehaviour;
 		}
 
 		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataStore`1"]/member[@name="#ctor"]/*'/>
 		protected DataStore() { 
-			this.IsDisposed = false;
+			myIsDisposed = false;
 		}
 
 		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataStore`1"]/member[@name="Finalize"]/*'/>
@@ -42,18 +42,12 @@ namespace Icod.Data {
 			get { 
 				return myBehaviour;
 			}
-			protected set { 
-				myBehaviour = value;
-			}
 		}
 
 		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.IDataStore`1"]/member[@name="DataConnection"]/*'/>
 		public System.Data.Common.DbConnection DataConnection { 
 			get { 
 				return myConnection;
-			}
-			protected set { 
-				myConnection = value;
 			}
 		}
 		#endregion properties
@@ -69,14 +63,14 @@ namespace Icod.Data {
 		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose(System.Boolean)"]/*'/>
 		protected virtual void Dispose( System.Boolean disposing ) { 
 			lock ( this ) { 
-				if ( false == this.IsDisposed ) { 
-					if ( ( null != this.DataConnection ) && ( System.Data.CommandBehavior.CloseConnection == ( this.Behaviour & System.Data.CommandBehavior.CloseConnection ) ) )  { 
+				if ( !myIsDisposed ) { 
+					if ( 
+						( null != this.DataConnection ) 
+						&& ( System.Data.CommandBehavior.CloseConnection == ( this.Behaviour & System.Data.CommandBehavior.CloseConnection ) )
+					) { 
 						this.DataConnection.Dispose();
 					}
-					if ( true == disposing ) { 
-						this.DataConnection = null;
-					}
-					this.IsDisposed = true;
+					myIsDisposed = true;
 				}
 			}
 		}

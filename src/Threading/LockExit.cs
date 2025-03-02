@@ -29,7 +29,7 @@ namespace Icod.Threading {
 
 		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.ISynchronousLock"]/member[@name="Exit"]/*'/>
 		private void Dispose( System.Boolean disposing ) { 
-			if ( true == disposing ) { 
+			if ( disposing ) { 
 				System.Threading.Thread.BeginCriticalRegion();
 				if ( null != myExit ) { 
 					myExit();

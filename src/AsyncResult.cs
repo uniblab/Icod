@@ -27,6 +27,7 @@ namespace Icod {
 
 		#region .ctor
 		static AsyncResult() {
+// some asshole changed the argument names in Volatile.Read and .Write between versions
 #if NET8_0_OR_GREATER
 			theReader = System.Threading.Volatile.Read;
 			theWriter = System.Threading.Volatile.Write;
