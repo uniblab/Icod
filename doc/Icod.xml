@@ -135,6 +135,35 @@
 		</member>
 	</type>
 
+	<type name="Icod.Pair`2">
+		<member name="">
+			<summary>An immutable reference type to conveniently hold two values of <typeparamref name="TFirst" /> and <typeparamref name="TSecond" /> values.</summary>
+		</member>
+		<member name="#sctor">
+			<summary>Initializes static values.</summary>
+		</member>
+		<member name="#ctor">
+			<summary>Sets the instance's initial values.</summary>
+		</member>
+		<member name="#ctor(`0,`1)">
+			<summary>Sets the instance's values.</summary>
+			<param name="first">
+				A value of type <typeparamref name="TFirst" /> to associate with the first value.
+			</param>
+			<param name="second">
+				A value of type <typeparamref name="TSecond" /> to associate with the first value.
+			</param>
+			<member name="First">
+				<summary>The first value.</summary>
+				<Returns>The first value.</Returns>
+			</member>
+			<member name="Ssecond">
+				<summary>The second value.</summary>
+				<Returns>The second value.</Returns>
+			</member>
+		</member>
+	</type>
+
 	<type name="Icod.AuthorAttribute">
 		<member name="">
 			<summary>Indicates the authorship of a body of work.</summary>
