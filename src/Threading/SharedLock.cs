@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Runtime.Remoting.Messaging;
 
 namespace Icod.Threading {
 
@@ -81,6 +82,9 @@ namespace Icod.Threading {
 			this.IncExcluder();
 			do {
 				_ = shareLock.Reset();
+#if NET8_0_OR_GREATER
+				System.ObjectDisposedException.ThrowIf( !excludeLock.WaitOne(), null );
+#else
 				if ( !excludeLock.WaitOne() ) {
 					throw new System.ObjectDisposedException( null );
 				}
@@ -131,9 +135,13 @@ namespace Icod.Threading {
 		}
 		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.IAsynchronousSharedLock"]/member[@name="EndExclude(System.IAsyncResult)"]/*'/>
 		public System.IDisposable EndExclude( System.IAsyncResult result ) {
+#if NET8_0_OR_GREATER
+			System.ArgumentNullException.ThrowIfNull( result, nameof( result ) );
+#else
 			if ( null == result ) {
 				throw new System.ArgumentNullException( nameof( result ) );
 			}
+#endif
 			Icod.Threading.LockResult input = ( result as Icod.Threading.LockResult ) ?? throw new System.ArgumentNullException( nameof( result ) );
 			return input.End();
 		}
@@ -174,16 +182,24 @@ namespace Icod.Threading {
 			do {
 				if ( Icod.Threading.SharedLock.ExcludeBit == ( Icod.Threading.SharedLock.ExcludeBit & theReader( ref this.State ) ) ) {
 					this.IncWaitingSharer();
+#if NET8_0_OR_GREATER
+					System.ObjectDisposedException.ThrowIf( !waitLock.WaitOne(), null );
+#else
 					if ( !waitLock.WaitOne() ) {
 						throw new System.ObjectDisposedException( null );
 					}
+#endif
 					this.DecWaitingSharer();
 				}
 				if ( Icod.Threading.SharedLock.ExcludeBit != ( Icod.Threading.SharedLock.ExcludeBit & theReader( ref this.State ) ) ) {
 					this.IncSharer();
+#if NET8_0_OR_GREATER
+					System.ObjectDisposedException.ThrowIf( !shareLock.WaitOne(), null );
+#else
 					if ( !shareLock.WaitOne() ) {
 						throw new System.ObjectDisposedException( null );
 					}
+#endif
 					break;
 				}
 			} while ( true );
@@ -216,9 +232,13 @@ namespace Icod.Threading {
 			return output;
 		}
 		private void ShareHelper( System.Object asyncResult ) {
+#if NET8_0_OR_GREATER
+			System.ArgumentNullException.ThrowIfNull( asyncResult, nameof( asyncResult ) );
+#else
 			if ( null == asyncResult ) {
 				throw new System.ArgumentNullException( nameof( asyncResult ) );
 			}
+#endif
 			Icod.Threading.LockResult input = ( asyncResult as Icod.Threading.LockResult ) ?? throw new System.ArgumentNullException( nameof( asyncResult ) );
 			try {
 				System.IDisposable result = this.Share();
@@ -229,9 +249,13 @@ namespace Icod.Threading {
 		}
 		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.IAsynchronousSharedLock"]/member[@name="EndShare(System.IAsyncResult)"]/*'/>
 		public System.IDisposable EndShare( System.IAsyncResult result ) {
+#if NET8_0_OR_GREATER
+			System.ArgumentNullException.ThrowIfNull( result, nameof( result ) );
+#else
 			if ( null == result ) {
 				throw new System.ArgumentNullException( nameof( result ) );
 			}
+#endif
 			Icod.Threading.LockResult input = ( result as Icod.Threading.LockResult ) ?? throw new System.ArgumentNullException( nameof( result ) );
 			return input.End();
 		}
@@ -281,7 +305,7 @@ namespace Icod.Threading {
 			} while ( false == Icod.Threading.Interlocked.ExchangeCompare( ref this.State, current, desired ) );
 			return ( Icod.Threading.SharedLock.ExcludeMask & theReader( ref this.State ) );
 		}
-		#endregion read
+#endregion read
 
 		#region dispose
 		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.SynchronousLockBase"]/member[@name="Dispose"]/*'/>
@@ -309,7 +333,7 @@ namespace Icod.Threading {
 			}
 		}
 		#endregion dispose
-		#endregion methods
+#endregion methods
 
 	}
 
