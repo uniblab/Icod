@@ -9,17 +9,17 @@ namespace Icod.Data {
 		#region fields
 		private System.Boolean myIsDisposed;
 		private readonly System.Data.CommandBehavior myBehaviour;
-		private readonly System.Data.Common.DbConnection myConnection;
+		private readonly System.Data.IDbConnection myConnection;
 		#endregion fields
 
 
 		#region .ctor
-		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataStore`1"]/member[@name="#ctor(System.Data.Common.DbConnection)"]/*'/>
-		public DataStore( System.Data.Common.DbConnection connection ) : this( connection, System.Data.CommandBehavior.SingleResult ) { 
+		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataStore`1"]/member[@name="#ctor(System.Data.IDbConnection)"]/*'/>
+		public DataStore( System.Data.IDbConnection connection ) : this( connection, System.Data.CommandBehavior.SingleResult ) { 
 		}
 
-		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataStore`1"]/member[@name="#ctor(System.Data.Common.DbConnection,System.Data.CommandBehavior)"]/*'/>
-		public DataStore( System.Data.Common.DbConnection connection, System.Data.CommandBehavior commandBehaviour ) : this() {
+		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataStore`1"]/member[@name="#ctor(System.Data.IDbConnection,System.Data.CommandBehavior)"]/*'/>
+		public DataStore( System.Data.IDbConnection connection, System.Data.CommandBehavior commandBehaviour ) : this() {
 			myConnection = connection;
 			myBehaviour = commandBehaviour;
 		}
@@ -45,7 +45,7 @@ namespace Icod.Data {
 		}
 
 		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.IDataStore`1"]/member[@name="DataConnection"]/*'/>
-		public System.Data.Common.DbConnection DataConnection { 
+		public System.Data.IDbConnection DataConnection { 
 			get { 
 				return myConnection;
 			}
@@ -65,10 +65,10 @@ namespace Icod.Data {
 			lock ( this ) { 
 				if ( !myIsDisposed ) { 
 					if ( 
-						( null != this.DataConnection ) 
+						( null != myConnection ) 
 						&& ( System.Data.CommandBehavior.CloseConnection == ( this.Behaviour & System.Data.CommandBehavior.CloseConnection ) )
 					) { 
-						this.DataConnection.Dispose();
+						myConnection.Dispose();
 					}
 					myIsDisposed = true;
 				}
