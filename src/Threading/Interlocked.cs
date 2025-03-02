@@ -4,8 +4,9 @@ namespace Icod.Threading {
 	[Icod.LgplLicense]
 	[Icod.Author( "Timothy J. ``Flytrap'' Bruce" )]
 	[Icod.ReportBugsTo( "mailto:uniblab@hotmail.com" )]
-	public static class Interlocked { 
+	public static class Interlocked {
 
+		///<include file='../../doc/Icod.Threading.xml' path='types/type[@name="Icod.Threading.Interlocked"]/member[@name="Add(System.Int64@,System.Int64)"]/*'/>
 		public static System.Int64 Add( ref System.Int64 value, System.Int64 with ) { 
 			System.Int64 j = value;
 			System.Int64 i;

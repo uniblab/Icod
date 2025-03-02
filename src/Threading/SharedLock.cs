@@ -85,11 +85,11 @@ namespace Icod.Threading {
 
 		#region methods
 		#region exclude
-		/// <include file='..\..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.ISynchronousLock"]/member[@name="Enter"]/*'/>
+		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.ISynchronousLock"]/member[@name="Enter"]/*'/>
 		public void Enter() {
 			this.EnterExclusive();
 		}
-		/// <include file='..\..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.ISynchronousLock"]/member[@name="Exit"]/*'/>
+		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.ISynchronousLock"]/member[@name="Exit"]/*'/>
 		public void Exit() {
 			this.ExitExclusive();
 		}
