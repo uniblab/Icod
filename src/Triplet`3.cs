@@ -1,5 +1,6 @@
 namespace Icod {
 
+	/// <include file='..\doc\Icod.xml' path='types/type[@name="Icod.Triplet`3"]/member[@name=""]/*'/>
 	[Icod.LgplLicense]
 	[Icod.Author( "Timothy J. ``Flytrap'' Bruce" )]
 	[Icod.ReportBugsTo( "mailto:uniblab@hotmail.com" )]
@@ -24,6 +25,7 @@ namespace Icod {
 			}
 		}
 
+		/// <include file='..\doc\Icod.xml' path='types/type[@name="Icod.Triplet`3"]/member[@name="#ctor(`0,`1,`2)"]/*'/>
 		public Triplet( TFirst first, TSecond second, TThird third ) : base( first, second ) {
 			myThird = third;
 			unchecked {
@@ -43,6 +45,7 @@ namespace Icod {
 
 
 		#region properties
+		/// <include file='..\doc\Icod.xml' path='types/type[@name="Icod.Triplet`3"]/member[@name="Third"]/*'/>
 		public virtual TThird Third {
 			get {
 				return myThird;
@@ -52,6 +55,7 @@ namespace Icod {
 
 
 		#region methods
+		/// <include file='..\doc\Icod.xml' path='types/type[@name="Icod.Triplet`3"]/member[@name="GetHashCode"]/*'/>
 		public sealed override System.Int32 GetHashCode() {
 			return myHashCode;
 		}

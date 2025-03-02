@@ -21,11 +21,13 @@ You should have received a copy of the GNU Lesser General Public
 
 namespace Icod {
 
+	/// <include file='..\doc\Icod.xml' path='types/type[@name="Icod.Pair"]/member[@name=""]/*'/>
 	[Icod.LgplLicense]
 	[Icod.Author( "Timothy J. ``Flytrap'' Bruce" )]
 	[Icod.ReportBugsTo( "mailto:uniblab@hotmail.com" )]
 	public sealed class Pair : Pair<System.Object> {
 
+		/// <include file='..\doc\Icod.xml' path='types/type[@name="Icod.Pair"]/member[@name="#ctor(System.Object,System.Object)"]/*'/>
 		public Pair( System.Object first, System.Object second ) : base( first, second ) {
 		}
 

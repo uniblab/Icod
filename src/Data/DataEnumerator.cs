@@ -76,13 +76,13 @@ namespace Icod.Data {
 			myReader = myCommand.ExecuteReader( myBehaviour );
 		}
 
-		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataEnumerator`1"]/member[@name="Dispose"]/*'/>
+		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose"]/*'/>
 		public void Dispose() { 
 			this.Dispose( true );
 			System.GC.SuppressFinalize( this );
 		}
 
-		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="Icod.Data.DataEnumerator`1"]/member[@name="Dispose(System.Boolean)"]/*'/>
+		/// <include file='..\..\doc\Icod.Data.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose(System.Boolean)"]/*'/>
 		protected virtual void Dispose( System.Boolean disposing ) { 
 			lock ( this ) { 
 				if ( false == disposed ) {

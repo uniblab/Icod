@@ -1,5 +1,23 @@
-using System.Runtime.CompilerServices;
-using System.Runtime.Remoting.Messaging;
+/*
+	copyright (c) 2025 Timothy J. ``Flytrap'' Bruce of the ICOD
+	written by Timothy J. ``Flytrap'' Bruce
+	uniblab@hotmail.com
+*/
+/*
+This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 3 of the License, or (at your option) any later version.  
+
+This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Lesser General Public License for more details.  
+
+You should have received a copy of the GNU Lesser General Public
+ License along with this library; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+*/
 
 namespace Icod.Threading {
 
@@ -11,8 +29,9 @@ namespace Icod.Threading {
 
 		#region fields
 		private static readonly VolatileRead theReader;
-
+#pragma warning disable IDE0044
 		private System.Int32 State = 0;
+#pragma warning restore IDE0044
 
 		private const System.Int32 ShareBit = 0x1000000;
 		private const System.Int32 ExcludeBit = 0x2000000;
@@ -30,21 +49,13 @@ namespace Icod.Threading {
 		private const System.Int32 WaitingShareMask = 0xff0000;
 		private const System.Int32 WaitingShareOffset = SharedLock.ShareOffset + 8;
 
-#if NET5_0
-		private System.Threading.AutoResetEvent excludeLock = new( true );
-#else
-		private System.Threading.AutoResetEvent excludeLock = new System.Threading.AutoResetEvent( true );
-#endif
-#if NET5_0
-		private System.Threading.ManualResetEvent shareLock = new( true );
-#else
-		private System.Threading.ManualResetEvent shareLock = new System.Threading.ManualResetEvent( true );
-#endif
-#if NET5_0
-		private System.Threading.Semaphore waitLock = new( 0, System.Byte.MaxValue );
-#else
-		private System.Threading.Semaphore waitLock = new System.Threading.Semaphore( 0, System.Byte.MaxValue );
-#endif
+#pragma warning disable IDE0044
+		private System.Boolean myIsDisposed = false;
+#pragma warning restore IDE0044
+
+		private readonly System.Threading.AutoResetEvent myExcludeLock;
+		private readonly System.Threading.ManualResetEvent myShareLock;
+		private readonly System.Threading.Semaphore myWaitLock;
 		#endregion fields
 
 
@@ -61,6 +72,9 @@ namespace Icod.Threading {
 
 		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.SharedLock"]/member[@name="#ctor"]/*'/>
 		public SharedLock() {
+			myExcludeLock = new System.Threading.AutoResetEvent( true );
+			myShareLock = new System.Threading.ManualResetEvent( true );
+			myWaitLock = new System.Threading.Semaphore( 0, System.Byte.MaxValue );
 		}
 		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.SharedLock"]/member[@name="#dtor"]/*'/>
 		~SharedLock() {
@@ -71,9 +85,11 @@ namespace Icod.Threading {
 
 		#region methods
 		#region exclude
+		/// <include file='..\..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.ISynchronousLock"]/member[@name="Enter"]/*'/>
 		public void Enter() {
 			this.EnterExclusive();
 		}
+		/// <include file='..\..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.ISynchronousLock"]/member[@name="Exit"]/*'/>
 		public void Exit() {
 			this.ExitExclusive();
 		}
@@ -81,24 +97,25 @@ namespace Icod.Threading {
 		private void EnterExclusive() {
 			this.IncExcluder();
 			do {
-				_ = shareLock.Reset();
+				_ = myShareLock.Reset();
 #if NET8_0_OR_GREATER
-				System.ObjectDisposedException.ThrowIf( !excludeLock.WaitOne(), null );
+				System.ObjectDisposedException.ThrowIf( !myExcludeLock.WaitOne(), null );
 #else
-				if ( !excludeLock.WaitOne() ) {
+				if ( !myExcludeLock.WaitOne() ) {
 					throw new System.ObjectDisposedException( null );
 				}
+#endif
 			} while ( 0 != ( Icod.Threading.SharedLock.ShareMask & theReader( ref this.State ) ) );
 		}
 
 		private void ExitExclusive() {
-			_ = excludeLock.Set();
+			_ = myExcludeLock.Set();
 			System.Int32 waitingShares = this.DecExcluder();
 			if ( 0 < waitingShares ) {
-				_ = waitLock.Release( waitingShares );
+				_ = myWaitLock.Release( waitingShares );
 			}
 			if ( Icod.Threading.SharedLock.ExcludeBit != ( Icod.Threading.SharedLock.ExcludeBit & theReader( ref this.State ) ) ) {
-				_ = shareLock.Set();
+				_ = myShareLock.Set();
 			}
 		}
 
@@ -118,7 +135,7 @@ namespace Icod.Threading {
 			return output;
 		}
 		private void ExcludeHelper( System.Object asyncResult ) {
-#if NET9_0_OR_GREATER
+#if NET8_0_OR_GREATER
 			System.ArgumentNullException.ThrowIfNull( asyncResult, nameof( asyncResult ) );
 #else
 			if ( null == asyncResult ) {
@@ -151,7 +168,7 @@ namespace Icod.Threading {
 			System.Int32 current;
 			System.Int32 desired;
 			do {
-				_ = shareLock.Reset(); // blocks any future shares until we are done excluding
+				_ = myShareLock.Reset(); // blocks any future shares until we are done excluding
 				current = theReader( ref this.State );
 				desired = ( ( current | SharedLock.ExcludeBit ) + SharedLock.Excluder );
 			} while ( false == Icod.Threading.Interlocked.ExchangeCompare( ref this.State, current, desired ) );
@@ -176,16 +193,16 @@ namespace Icod.Threading {
 
 		#region share
 		private void EnterShare() {
-			_ = excludeLock.Reset();
+			_ = myExcludeLock.Reset();
 			// if there are no excluders, then we can immediately share;
 			// otherwise, we are enqueuing a waitingsharer
 			do {
 				if ( Icod.Threading.SharedLock.ExcludeBit == ( Icod.Threading.SharedLock.ExcludeBit & theReader( ref this.State ) ) ) {
 					this.IncWaitingSharer();
 #if NET8_0_OR_GREATER
-					System.ObjectDisposedException.ThrowIf( !waitLock.WaitOne(), null );
+					System.ObjectDisposedException.ThrowIf( !myWaitLock.WaitOne(), null );
 #else
-					if ( !waitLock.WaitOne() ) {
+					if ( !myWaitLock.WaitOne() ) {
 						throw new System.ObjectDisposedException( null );
 					}
 #endif
@@ -194,9 +211,9 @@ namespace Icod.Threading {
 				if ( Icod.Threading.SharedLock.ExcludeBit != ( Icod.Threading.SharedLock.ExcludeBit & theReader( ref this.State ) ) ) {
 					this.IncSharer();
 #if NET8_0_OR_GREATER
-					System.ObjectDisposedException.ThrowIf( !shareLock.WaitOne(), null );
+					System.ObjectDisposedException.ThrowIf( !myShareLock.WaitOne(), null );
 #else
-					if ( !shareLock.WaitOne() ) {
+					if ( !myShareLock.WaitOne() ) {
 						throw new System.ObjectDisposedException( null );
 					}
 #endif
@@ -208,11 +225,11 @@ namespace Icod.Threading {
 			if ( 0 == this.DecSharer() ) {
 				System.Int32 waiters = ( SharedLock.WaitingShareMask & theReader( ref this.State ) ) >> SharedLock.WaitingShareOffset;
 				if ( 0 < waiters ) {
-					_ = this.waitLock.Release( waiters );
+					_ = this.myWaitLock.Release( waiters );
 				}
 			}
 			if ( 0 == ( SharedLock.ShareMask & theReader( ref this.State ) ) ) {
-				_ = excludeLock.Set();
+				_ = myExcludeLock.Set();
 			}
 		}
 		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.ISynchronousSharedLock"]/member[@name="Share"]/*'/>
@@ -305,35 +322,29 @@ namespace Icod.Threading {
 			} while ( false == Icod.Threading.Interlocked.ExchangeCompare( ref this.State, current, desired ) );
 			return ( Icod.Threading.SharedLock.ExcludeMask & theReader( ref this.State ) );
 		}
-#endregion read
+		#endregion read
 
 		#region dispose
-		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.SynchronousLockBase"]/member[@name="Dispose"]/*'/>
+		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose"]/*'/>
 		public void Dispose() {
 			this.Dispose( true );
 			System.GC.SuppressFinalize( this );
 		}
-		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.SynchronousLockBase"]/member[@name="Dispose(System.Boolean)"]/*'/>
+		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose(System.Boolean)"]/*'/>
 		private void Dispose( System.Boolean disposing ) {
 			if ( true == disposing ) {
 				System.Threading.Thread.BeginCriticalRegion();
-				if ( null != waitLock ) {
-					waitLock.Close();
-					waitLock = null;
+				if ( !myIsDisposed ) {
+					myWaitLock?.Close();
+					myShareLock?.Close();
+					myExcludeLock?.Close();
 				}
-				if ( null != shareLock ) {
-					shareLock.Close();
-					shareLock = null;
-				}
-				if ( null != excludeLock ) {
-					excludeLock.Close();
-					excludeLock = null;
-				}
+				myIsDisposed = true;
 				System.Threading.Thread.EndCriticalRegion();
 			}
 		}
 		#endregion dispose
-#endregion methods
+		#endregion methods
 
 	}
 

@@ -262,6 +262,26 @@ using ( myLockObject.Acquire() ) {
 				</code>
 			</example>
 		</member>
+		<member name="Dispose">
+			<summary>
+				Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+			</summary>
+		</member>
+		<member name="Dispose(System.Boolean)">
+			<summary>
+				Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+			</summary>
+			<param name="disposing">
+				If disposing equals true, the method has been called directly or indirectly by a user's code.
+				Managed and unmanaged resources can be disposed.
+				If disposing equals false, the method has been called by the runtime from inside the finalizer
+				and you should not reference other objects.
+				Only unmanaged resources can be disposed.
+			</param>
+			<remarks>
+				Releases all locks.  Behavior at this point is undefined.
+			</remarks>
+		</member>
 	</type>
 
 	<type name="Icod.Threading.LockResult">

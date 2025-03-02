@@ -11,6 +11,31 @@
 -->
 <types>
 
+	<type name="System.IDisposable">
+		<member name="Dispose">
+			<summary>Releases unmanaged locking objects.</summary>
+			<remarks>
+				Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+			</remarks>
+		</member>
+		<member name="Dispose(System.Boolean)">
+			<summary>
+				Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+			</summary>
+			<param name="disposing">
+				If disposing equals true, the method has been called directly or indirectly by a user's code.
+				Managed and unmanaged resources can be disposed.
+				If disposing equals false, the method has been called by the runtime from inside the finalizer
+				and you should not reference other objects.
+				Only unmanaged resources can be disposed.
+			</param>
+			<remarks>
+				Releases all locks.  Behavior at this point is undefined.
+			</remarks>
+		</member>
+
+	</type>
+
 	<type name="Icod.Exception">
 		<member name="">
 			<summary>The root type for all Icod-based framework exceptions.</summary>
@@ -137,7 +162,9 @@
 
 	<type name="Icod.Pair`2">
 		<member name="">
-			<summary>An immutable reference type to conveniently hold two values of <typeparamref name="TFirst" /> and <typeparamref name="TSecond" /> values.</summary>
+			<summary>
+				An immutable reference type to conveniently hold two values of <typeparamref name="TFirst" /> and <typeparamref name="TSecond" />.
+			</summary>
 		</member>
 		<member name="#sctor">
 			<summary>Initializes static values.</summary>
@@ -151,16 +178,116 @@
 				A value of type <typeparamref name="TFirst" /> to associate with the first value.
 			</param>
 			<param name="second">
-				A value of type <typeparamref name="TSecond" /> to associate with the first value.
+				A value of type <typeparamref name="TSecond" /> to associate with the second value.
 			</param>
-			<member name="First">
-				<summary>The first value.</summary>
-				<Returns>The first value.</Returns>
-			</member>
-			<member name="Ssecond">
-				<summary>The second value.</summary>
-				<Returns>The second value.</Returns>
-			</member>
+		</member>
+		<member name="First">
+			<summary>The first value.</summary>
+			<returns>The first value.</returns>
+		</member>
+		<member name="Second">
+			<summary>The second value.</summary>
+			<returns>The second value.</returns>
+		</member>
+		<member name="GetHashCode">
+			<summary>Returns the hash code of the current instance.</summary>
+			<returns>A hash code for the current instance.</returns>
+			<seealso cref="M:System.Object.GetHashCode" />
+			<seealso cref="T:System.Int32" />
+		</member>
+	</type>
+	<type name="Icod.Pair`1">
+		<member name="">
+			<summary>
+				An immutable reference type to conveniently hold two values of <typeparamref name="T" />.
+			</summary>
+		</member>
+		<member name="#ctor(`0,`1)">
+			<summary>Sets the instance's values.</summary>
+			<param name="first">
+				A value of type <typeparamref name="T" /> to associate with the first value.
+			</param>
+			<param name="second">
+				A value of type <typeparamref name="T" /> to associate with the second value.
+			</param>
+		</member>
+	</type>
+	<type name="Icod.Pair">
+		<member name="">
+			<summary>
+				An immutable reference type to conveniently hold two values.
+			</summary>
+		</member>
+		<member name="#ctor(System.Object,System.Object)">
+			<summary>Sets the instance's values.</summary>
+			<param name="first">
+				A value to associate with the first value.
+			</param>
+			<param name="second">
+				A value associate with the second value.
+			</param>
+		</member>
+	</type>
+
+	<type name="Icod.Triplet`3">
+		<member name="">
+			<summary>
+				An immutable reference type to conveniently hold three values of <typeparamref name="TFirst" />, <typeparamref name="TSecond" />, and <typeparamref name="TThird" />.
+			</summary>
+		</member>
+		<member name="#ctor(`0,`1,`2)">
+			<summary>Sets the instance's values.</summary>
+			<param name="first">
+				A value of type <typeparamref name="TFirst" /> to associate with the first value.
+			</param>
+			<param name="second">
+				A value of type <typeparamref name="TSecond" /> to associate with the second value.
+			</param>
+			<param name="third">
+				A value of type <typeparamref name="TThird" /> to associate with the third value.
+			</param>
+		</member>
+		<member name="Third">
+			<summary>The third value.</summary>
+			<returns>The third value.</returns>
+		</member>
+	</type>
+	<type name="Icod.Triplet`1">
+		<member name="">
+			<summary>
+				An immutable reference type to conveniently hold three values of <typeparamref name="T" />.
+			</summary>
+		</member>
+		<member name="#ctor(`0,`1,`2)">
+			<summary>Sets the instance's values.</summary>
+			<param name="first">
+				A value of type <typeparamref name="T" /> to associate with the first value.
+			</param>
+			<param name="second">
+				A value of type <typeparamref name="T" /> to associate with the second value.
+			</param>
+			<param name="third">
+				A value of type <typeparamref name="T" /> to associate with the third value.
+			</param>
+		</member>
+	</type>
+	<type name="Icod.Triplet">
+		<member name="">
+			<summary>
+				An immutable reference type to conveniently hold three values.
+			</summary>
+		</member>
+		<member name="#ctor(System.Object,System.Object,System.Object)">
+			<summary>Sets the instance's values.</summary>
+			<param name="first">
+				A value to associate with the first value.
+			</param>
+			<param name="second">
+				A value associate with the second value.
+			</param>
+			<param name="third">
+				A value associate with the third value.
+			</param>
 		</member>
 	</type>
 

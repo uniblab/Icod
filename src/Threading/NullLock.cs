@@ -24,7 +24,7 @@ namespace Icod.Threading {
 			;
 		}
 
-		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.SynchronousLockBase"]/member[@name="Dispose(System.Boolean)"]/*'/>
+		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose(System.Boolean)"]/*'/>
 		protected sealed override void Dispose( System.Boolean disposing ) { 
 			;
 		}

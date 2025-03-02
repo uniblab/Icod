@@ -78,7 +78,7 @@ namespace Icod.Threading {
 			System.GC.SuppressFinalize( this );
 		}
 
-		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="Icod.Threading.SynchronousLockBase"]/member[@name="Dispose(System.Boolean)"]/*'/>
+		/// <include file='..\..\doc\Icod.Threading.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose(System.Boolean)"]/*'/>
 		protected abstract void Dispose( System.Boolean disposing );
 		#endregion methods
 
