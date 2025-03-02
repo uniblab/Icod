@@ -1,1 +1,5 @@
-*.sln text
+# normalize line-endings
+* text=auto
+
+# Solution files are text files
+*.sln text eol=crlf
