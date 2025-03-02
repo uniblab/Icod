@@ -38,7 +38,7 @@
 		<FileVersion>2.0.0.0</FileVersion>
 		<AssemblyVersion>2.0.0.0</AssemblyVersion>
 		<PackageVersion>2.0.0</PackageVersion>
-		<PackageReleaseNotes>Major revision and uplift, supporting many different platforms, improved xmldoc.</PackageReleaseNotes>
+		<PackageReleaseNotes>Major revision and uplift, supporting many different platforms, improved xmldoc, updated LGPL.</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<PropertyGroup>
