@@ -7,7 +7,8 @@ namespace Icod.Threading {
 	public sealed class AsynchronousLock<L> : ISynchronousLock, IAsynchronousLock where L : class, ISynchronousLock, new() { 
 
 		#region fields
-		private Icod.Threading.ISynchronousLock myLock;
+		private readonly Icod.Threading.ISynchronousLock myLock;
+		private System.Boolean myIsDisposed = false;
 		#endregion fields
 
 
@@ -74,16 +75,18 @@ namespace Icod.Threading {
 			}
 		}
 
+		/// <include file='..\doc\Icod.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose"]/*'/>
 		public void Dispose() { 
 			this.Dispose( true );
 			System.GC.SuppressFinalize( this );
 		}
+		/// <include file='..\doc\Icod.xml' path='types/type[@name="System.IDisposable"]/member[@name="Dispose(System.Boolean)"]/*'/>
 		public void Dispose( System.Boolean disposing ) { 
 			if ( true == disposing ) { 
 				System.Threading.Thread.BeginCriticalRegion();
-				if ( null != myLock ) { 
-					myLock.Dispose();
-					myLock = null;
+				if ( !myIsDisposed ) {
+					myLock?.Dispose();
+					myIsDisposed = true;
 				}
 				System.Threading.Thread.EndCriticalRegion();
 			}
