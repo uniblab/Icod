@@ -90,7 +90,6 @@
 		<DelaySign>false</DelaySign>
 	</PropertyGroup>
 	<ItemGroup>
-		<None Include="doc\Icod.Data.xml" />
 		<None Include="doc\Icod.Threading.xml" />
 		<None Include="doc\Icod.xml" />
 	</ItemGroup>
