@@ -42,7 +42,7 @@
 			</remarks>
 			<example>
 				Dynamically using the various ICOD locking mechanisms:
-				<code>
+				<code lang="cs">
 namespace Example {
 	private static Icod.Threading.SynchronousLockBase myGlobalLock;
 
@@ -74,7 +74,7 @@ namespace Example {
 			<summary>Ensures managed and unmanaged resources are released by any type derived from this type.</summary>
 			<remarks>
 				Always remember to invoke <see cref="M:Icod.Threading.SynchronousLockBase.Dispose">Icod.Threading.SynchronousLockBase.Dispose</see> 
-					before finalizing (setting to <c>null</c> all object references) synchronization context (lock) object to free any unmanaged resources.  
+					before finalizing (setting to <see langword="null" /> all object references) synchronization context (lock) object to free any unmanaged resources.  
 			</remarks>
 			<seealso cref="M:System.Object.Finalize" />
 			<seealso cref="T:System.IDisposable" />
@@ -240,7 +240,7 @@ namespace Example {
 				An existing <see cref="T:Icod.Threading.SynchronousLockBase">Icod.Threading.SynchronousLockBase</see> object to use for all synchronized (locking) operations.
 			</param>
 			<exception cref="T:System.NullArgumentException">
-				Thrown if <paramref name="theLock"/> is <c>null</c>.
+				Thrown if <paramref name="theLock"/> is <<see langword="null" />.
 			</exception>
 		</member>
 		<member name="#dtor">
@@ -281,9 +281,9 @@ using ( myLockObject.Acquire() ) {
 				Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
 			</summary>
 			<param name="disposing">
-				If disposing equals true, the method has been called directly or indirectly by a user's code.
+				If disposing is <see langword="true" />, the method has been called directly or indirectly by a user's code.
 				Managed and unmanaged resources can be disposed.
-				If disposing equals false, the method has been called by the runtime from inside the finalizer
+				If disposing is <see langword="false" />, the method has been called by the runtime from inside the finalizer
 				and you should not reference other objects.
 				Only unmanaged resources can be disposed.
 			</param>
@@ -313,7 +313,7 @@ using ( myLockObject.Acquire() ) {
 				<see langword="true" /> if the asynchronous operation completed synchronously; otherwise, <see langword="false" />.
 			</param>
 			<param name="completionException">
-				<c>null</c> if no exceptions were raised during the asynchronous request; otherwise a <see cref="T:System.Exception">System.Exception</see>.
+				<see langword="null" /> if no exceptions were raised during the asynchronous request; otherwise a <see cref="T:System.Exception">System.Exception</see>.
 			</param>
 		</member>
 		<member name="EndInvoke">
@@ -390,7 +390,7 @@ using ( myLockObject.Acquire() ) {
 				An existing <see cref="T:Icod.Threading.SynchronousLockBase">Icod.Threading.SynchronousLockBase</see> object to use for all synchronized (lock) operations.
 			</param>
 			<exception cref="T:System.NullArgumentException">
-				Thrown if <paramref name="theLock"/> is <c>null</c>.
+				Thrown if <paramref name="theLock"/> is <see langword="null" />.
 			</exception>
 		</member>
 		<member name="#dtor">

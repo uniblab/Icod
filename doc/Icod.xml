@@ -32,9 +32,9 @@
 				Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
 			</summary>
 			<param name="disposing">
-				If disposing equals true, the method has been called directly or indirectly by a user's code.
+				If disposing is <see langword="true" />, the method has been called directly or indirectly by a user's code.
 				Managed and unmanaged resources can be disposed.
-				If disposing equals false, the method has been called by the runtime from inside the finalizer
+				If disposing is <see langword="false" />, the method has been called by the runtime from inside the finalizer
 				and you should not reference other objects.
 				Only unmanaged resources can be disposed.
 			</param>
@@ -77,95 +77,6 @@
 			<returns>
 				A user-defined object that qualifies or contains the result of the asynchronous operation.
 			</returns>
-		</member>
-	</type>
-
-	<type name="Icod.Exception">
-		<member name="">
-			<summary>The root type for all Icod-based framework exceptions.</summary>
-			<seealso cref="T:System.ApplicationException"/>
-			<seealso>Partition I of the CLI Specification</seealso>
-			<threadsafety static="true" instance="false" />
-			<remarks>
-				This class is the base class for all ICOD Exceptions.
-				When an error occurs the library reports it by throwing an <c>Icod.Exception</c> (or one of her derived types) containing information about the error.
-			</remarks>
-		</member>
-		<member name="#ctor">
-			<summary>
-				Constructs and initializes a new instance of the <see cref="T:Icod.Exception">Icod.Exception</see> class.
-			</summary>
-			<remarks>
-				This constructor initializes the <see cref="P:Icod.Exception.Message">Icod.Exception.Message</see> property of the new instance to a system-supplied message that describes the error and takes into account the current system culture.
-				The <see cref="P:Icod.Exception.InnerException">Icod.Exception.InnerException</see> property is initialized to <see langword="null" /> and the
-				<see cref="P:Icod.Exception.StackTrace">Icod.Exception.StackTrace</see> property is initialized to <see cref="F:System.String.Empty">System.String.Empty</see>.
-			</remarks>
-			<seealso cref="M:System.ApplicationException#ctor" />
-		</member>
-		<member name="#ctor(System.String)">
-			<summary>
-				Constructs and initializes a new instance of the <see cref="T:Icod.Exception">Icod.Exception</see> class.
-			</summary>
-			<param name='message'>
-				A <see cref="T:System.String">System.String</see> that describes the error.
-				The content of message is intended to be understood by humans.
-				The caller of this constructor is required to ensure that this string has been localized for the current system culture.
-			</param>
-			<remarks>
-				<param>
-					This constructor initializes the <see cref="P:Icod.Exception.Message">Icod.Exception.Message</see> property of the new instance using <paramref name="message" />.
-					If <paramref name="message" /> is null, the <see cref="P:Icod.Exception.Message">Icod.Exception.Message</see> property is initialized to the system-supplied message provided by the <see cref="M:Icod.Exception#ctor">constructor</see> that takes no arguments.
-					The <see cref="P:Icod.Exception.InnerException">Icod.Exception.InnerException</see> property is initialized to null and the <see cref="P:Icod.Exception.StackTrace">Icod.Exception.StackTrace</see> property is initialized to <see cref="F:System.String.Empty">System.String.Empty</see>.
-				</param>
-				<param>
-					Identical to invoking <c>
-						new Icod.Exception( <paramref name="message" />, null )
-					</c>.
-				</param>
-			</remarks>
-			<seealso cref="M:System.ApplicationException#ctor(System.String)" />
-		</member>
-		<member name="#ctor(System.String,System.Exception)">
-			<summary>
-				Constructs and initializes a new instance of the <see cref="T:Icod.Exception">Icod.Exception</see> class.
-			</summary>
-			<param name='message'>
-				A <see cref="T:System.String">System.String</see> that describes the error.
-				The content of message is intended to be understood by humans.
-				The caller of this constructor is required to ensure that this string has been localized for the current system culture.
-			</param>
-			<param name="innerException">
-				The underlying <see cref="T:System.Exception">exception</see> which triggered this exception's generation.
-			</param>
-			<seealso cref="M:System.ApplicationException#ctor(System.String,System.Exception)" />
-		</member>
-		<member name="#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-			<summary>
-				Constructs a new instance from a serialized source.
-			</summary>
-			<param name="info">
-				The serialized values to retreive.
-			</param>
-			<param name="sc">
-				Contextual or formatting information about said values.
-			</param>
-			<remarks>
-				Used for serialization only.
-			</remarks>
-		</member>
-		<member name="GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-			<summary>
-				Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo">SerializationInfo</see> with the data needed to serialize the target object.
-			</summary>
-			<param name="info">
-				The <see cref="T:System.Runtime.Serialization.SerializationInfo">SerializationInfo</see> to populate with data.
-			</param>
-			<param name="context">
-				The destination (<see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.
-			</param>
-			<remarks>
-				Any objects that are included in the <see cref="T:System.Runtime.Serialization.SerializationInfo">SerializationInfo</see> are automatically tracked and serialized by the formatter.
-			</remarks>
 		</member>
 	</type>
 
@@ -822,7 +733,7 @@
 			<value>
 				<see langword="true" /> if the asynchronous operation completed synchronously; otherwise, <see langword="false" />.
 			</value>
-			<remarks>This property is usually false.</remarks>
+			<remarks>This property is usually <see langword="false" />.</remarks>
 		</member>
 		<member name="IsCompleted">
 			<summary>
