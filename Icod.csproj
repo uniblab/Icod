@@ -35,10 +35,10 @@
 		<StartupObject />
 
 		<TargetFrameworks>net20;net30;net35;net40;net45;net451;net452;net46;net461;net462;net47;net471;net472;net48;net481;netstandard2.0;netstandard2.1;netcoreapp3.0;netcoreapp3.1;net5.0;net6.0;net7.0;net8.0;net9.0</TargetFrameworks>
-		<FileVersion>2.0.2.0</FileVersion>
-		<AssemblyVersion>2.0.2.0</AssemblyVersion>
-		<PackageVersion>2.0.2</PackageVersion>
-		<PackageReleaseNotes>Correction readme</PackageReleaseNotes>
+		<FileVersion>2.0.3.0</FileVersion>
+		<AssemblyVersion>2.0.3.0</AssemblyVersion>
+		<PackageVersion>2.0.3</PackageVersion>
+		<PackageReleaseNotes>Update package license xml declaration, update xmldoc</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -58,7 +58,7 @@
 		<Authors>Timothy J. Bruce</Authors>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>icon.png</PackageIcon>
-		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<IncludeContentInPack>true</IncludeContentInPack>
 		<IncludeSymbols>True</IncludeSymbols>

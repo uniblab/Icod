@@ -240,7 +240,7 @@ namespace Example {
 				An existing <see cref="T:Icod.Threading.SynchronousLockBase">Icod.Threading.SynchronousLockBase</see> object to use for all synchronized (locking) operations.
 			</param>
 			<exception cref="T:System.NullArgumentException">
-				Thrown if <paramref name="theLock"/> is <<see langword="null" />.
+				Thrown if <paramref name="theLock"/> is <see langword="null" />.
 			</exception>
 		</member>
 		<member name="#dtor">
