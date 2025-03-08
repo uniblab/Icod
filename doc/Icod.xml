@@ -411,7 +411,7 @@
 				This constructor does not ensure the Uri refers to an accessible resource.
 			</remarks>
 			<exception cref="T:System.ArgumentNullException">
-				Thrown when <paramref name="uri" />is a null reference.
+				Thrown when <paramref name="uri" />is <see langword="null"/>.
 			</exception>
 			<exception cref="T:System.UriFormatException">
 				<list type="bullet">
